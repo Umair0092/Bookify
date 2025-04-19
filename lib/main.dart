@@ -1,3 +1,4 @@
+import 'package:bookify/views/Home.dart';
 import 'package:bookify/views/login.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(255, 193, 7, 1)),
+        fontFamily: "Poppins"
       ),
-      home: login(),
+      home: home(),
     );
   }
 }
