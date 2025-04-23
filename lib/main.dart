@@ -1,9 +1,12 @@
-import 'package:bookify/views/Home.dart';
-import 'package:bookify/views/login.dart';
+import 'package:bookify/Screens/Home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:device_preview/device_preview.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) => MyApp(),));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,12 +16,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      
+      
+      home: home(),
+       locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      //theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      //home:  PaymentPage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(255, 193, 7, 1)),
         fontFamily: "Poppins"
       ),
-      home: home(),
+      //theme: ThemeData.dark(),
+      title: "Bookify",
+      debugShowCheckedModeBanner: false,
+
+
+
+
     );
   }
 }

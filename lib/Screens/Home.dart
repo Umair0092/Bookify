@@ -1,3 +1,4 @@
+import 'package:bookify/Screens/flights/flights.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +111,8 @@ class _homeState extends State<home> {
                       setState(() {
                         _isTapped = true;
                       });
+                      print("down");
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     onTapUp: (_) {
                       setState(() {
@@ -117,11 +120,13 @@ class _homeState extends State<home> {
                       });
 
                       print("Forgot Password tapped!");
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped = false;
                       });
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     child: Container(
                       height: 100,
@@ -147,12 +152,13 @@ class _homeState extends State<home> {
                       setState(() {
                         _isTapped2 = true;
                       });
+                      print("down");
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped2 = false;
                       });
-
+                     
                       print("Forgot Password tapped!");
                     },
                     onTapCancel: () {

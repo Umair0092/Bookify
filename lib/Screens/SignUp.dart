@@ -1,15 +1,14 @@
-import 'package:bookify/views/Colors.dart';
-import 'package:bookify/views/SignUp.dart';
+import 'package:bookify/Screens/Colors.dart';
 import 'package:flutter/material.dart';
 
-class login extends StatefulWidget {
-  const login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<login> createState() => _loginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _loginState extends State<login> {
+class _SignupState extends State<Signup> {
   bool _isTapped = false;
   bool _isTapped2 = false;
   @override
@@ -24,6 +23,40 @@ class _loginState extends State<login> {
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Image.asset("images/logo.png", height: 250),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 50),
+              Expanded(
+                child: TextField(
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                    //enabledBorder: InputBorder.none,
+
+                    // focusedBorder: InputBorder.none,
+                    //disabledBorder: InputBorder.none,
+                    //errorBorder: InputBorder.none,
+                    filled: true,
+                    fillColor: bgColor.withOpacity(
+                      0.5,
+                    ), // Set your desired background color
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    hintText: ("Name"),
+
+                    hintStyle: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  onSubmitted: (value) {},
+                ),
+              ),
+              SizedBox(width: 50),
+            ],
+          ),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -116,12 +149,12 @@ class _loginState extends State<login> {
                 "Forgot Password?",
                 style: TextStyle(
                   color:
-                      _isTapped
-                          ? Color.fromRGBO(255, 193, 7, 1)
-                          : Colors.white70,
+                  _isTapped
+                      ? Color.fromRGBO(255, 193, 7, 1)
+                      : Colors.white70,
                   fontSize: 16,
                   decoration:
-                      TextDecoration.underline,
+                  TextDecoration.underline,
                 ),
               ),
             ),
@@ -155,7 +188,7 @@ class _loginState extends State<login> {
                     ? Color.fromRGBO(255, 193, 7, 0.8)
                     : Color.fromRGBO(255, 193, 7, 1),
               ),
-              child: Center(child: Text("Log In ",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.black),)),
+              child: Center(child: Text("Sign Up",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.black),)),
             ),
           ),
           SizedBox(height: 20,),
@@ -163,7 +196,7 @@ class _loginState extends State<login> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don't Have Account?",style: TextStyle(color: white.withOpacity(0.7)),),
+                Text("Already Have an Account?",style: TextStyle(color: white.withOpacity(0.7)),),
                 SizedBox(width: 5,),
                 GestureDetector(
                   onTapDown: (_) {
@@ -175,7 +208,7 @@ class _loginState extends State<login> {
                     setState(() {
                       _isTapped2 = false;
                     });
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
+                    Navigator.pop(context);
                     print("Sign Up pressed");
                   },
                   onTapCancel: () {
@@ -184,7 +217,7 @@ class _loginState extends State<login> {
                     });
                   },
                   child: Text(
-                    "Sign Up",
+                    "Log In",
                     style: TextStyle(
                       color:
                       _isTapped2
