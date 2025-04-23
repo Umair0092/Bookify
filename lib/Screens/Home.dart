@@ -1,3 +1,5 @@
+import 'package:bookify/Screens/bus/bus.dart';
+import 'package:bookify/Screens/events/events.dart';
 import 'package:bookify/Screens/flights/flights.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -153,11 +155,13 @@ class _homeState extends State<home> {
                         _isTapped2 = true;
                       });
                       print("down");
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped2 = false;
                       });
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
                      
                       print("Forgot Password tapped!");
                     },
@@ -165,6 +169,7 @@ class _homeState extends State<home> {
                       setState(() {
                         _isTapped2 = false;
                       });
+                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
                     },
                     child: Container(
                       height: 100,
@@ -180,6 +185,7 @@ class _homeState extends State<home> {
                         children: [
                           Icon(Icons.directions_bus_filled, color: Colors.black, size: 50),
                           Text("Buses",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                          
                         ],
                       ),
                     ),
@@ -195,19 +201,22 @@ class _homeState extends State<home> {
                       setState(() {
                         _isTapped3 = true;
                       });
+                      
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped3 = false;
                       });
-
+                       
                       print("Forgot Password tapped!");
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped3 = false;
                       });
+                       
                     },
+
                     child: Container(
                       height: 100,
                       width: 100,
@@ -232,18 +241,20 @@ class _homeState extends State<home> {
                       setState(() {
                         _isTapped4 = true;
                       });
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => Events(),),);
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped4 = false;
                       });
-
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => Events(),),);
                       print("Forgot Password tapped!");
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped4 = false;
                       });
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => Events(),),);
                     },
                     child: Container(
                       height: 100,
