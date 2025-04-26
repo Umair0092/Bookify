@@ -3,6 +3,8 @@ import 'package:bookify/Screens/Colors.dart';
 import 'package:bookify/Screens/payments/payment.dart';
 import 'package:flutter/material.dart';
 
+import 'event_details.dart';
+
 class Eventssearch extends StatefulWidget {
   const Eventssearch({super.key});
 
@@ -118,66 +120,71 @@ Widget buildeventcard({
 }
 )
 {
- return Card(
-      color: Colors.grey[900],
-      margin: const EdgeInsets.only(bottom: 16.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
-            child: Image.asset(
-              imagePath,
-              width: 120,
-              height: 120,
-              fit: BoxFit.cover,
+ return GestureDetector(
+   onTap: (){
+     Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext)=>EventBookingPage()));
+   },
+   child: Card(
+        color: Colors.grey[900],
+        margin: const EdgeInsets.only(bottom: 16.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+              child: Image.asset(
+                imagePath,
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    artist,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (tour.isNotEmpty)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      tour,
+                      artist,
                       style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 14,
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  SizedBox(height: 8),
-                  Text(
-                    time,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
+                    if (tour.isNotEmpty)
+                      Text(
+                        tour,
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 14,
+                        ),
+                      ),
+                    SizedBox(height: 8),
+                    Text(
+                      time,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext) => PaymentPage(),),);
+                },
+                child: Text('Select'),
               ),
-              onPressed: () {
-                Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext) => PaymentPage(),),);
-              },
-              child: Text('Select'),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
-    );
+ );
 }

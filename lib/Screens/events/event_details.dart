@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import '../payments/payment.dart';
 
 
-
-class BusBookingPage extends StatefulWidget {
+class EventBookingPage extends StatefulWidget {
   @override
-  _BusBookingPageState createState() => _BusBookingPageState();
+  _EventBookingPageState createState() => _EventBookingPageState();
 }
 
-class _BusBookingPageState extends State<BusBookingPage> {
+class _EventBookingPageState extends State<EventBookingPage> {
   int _ticketCount = 1;
-  final double _singleTicketCost = 30.0; // Cost of a single bus ticket in dollars
+  final double _singleTicketCost = 50.0; // Cost of a single event ticket in dollars
 
   void _incrementTickets() {
     setState(() {
@@ -81,7 +80,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bus Booking",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+        title: Text("Event Booking"),
         backgroundColor:Color(0xFFFFD700),
         foregroundColor: Colors.black,
       ),
@@ -91,10 +90,10 @@ class _BusBookingPageState extends State<BusBookingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Bus Images Section (Circular Layout)
+              // Event Images Section (Circular Layout)
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 70,vertical: 10),
                 height: 250,
+                margin: EdgeInsets.symmetric(horizontal: 70,vertical: 10),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -108,14 +107,14 @@ class _BusBookingPageState extends State<BusBookingPage> {
                     ),
                     CircleAvatar(
                       radius: 80,
-                      backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                      backgroundImage: NetworkImage('https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
                     ),
                     Positioned(
                       top: 0,
                       left: 0,
                       child: CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                        backgroundImage: NetworkImage('https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
                       ),
                     ),
                     Positioned(
@@ -123,7 +122,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
                       right: 0,
                       child: CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                        backgroundImage: NetworkImage('https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
                       ),
                     ),
                     Positioned(
@@ -131,33 +130,33 @@ class _BusBookingPageState extends State<BusBookingPage> {
                       left: 0,
                       child: CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                        backgroundImage: NetworkImage('https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 20),
-              // Facilities Section
+              // Event Highlights Section
               Text(
-                "Facilities",
+                "Event Highlights",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              FacilityCard(
-                icon: Icons.wifi,
-                title: "Free Wi-Fi",
-                description: "Stay connected with high-speed internet on board.",
+              HighlightCard(
+                icon: Icons.music_note,
+                title: "Live Performances",
+                description: "Enjoy live music or thrilling sports action.",
               ),
-              FacilityCard(
-                icon: Icons.ac_unit,
-                title: "Air Conditioning",
-                description: "Travel comfortably with a cool and refreshing environment.",
+              HighlightCard(
+                icon: Icons.local_dining,
+                title: "Food & Beverages",
+                description: "A variety of food stalls and drinks available.",
               ),
-              FacilityCard(
-                icon: Icons.event_seat,
-                title: "Reclining Seats",
-                description: "Relax with adjustable seats for a comfortable journey.",
+              HighlightCard(
+                icon: Icons.star,
+                title: "VIP Experience",
+                description: "Exclusive seating and special access for VIPs.",
               ),
               SizedBox(height: 20),
               // Ticket Quantity Selector
@@ -222,11 +221,12 @@ class _BusBookingPageState extends State<BusBookingPage> {
               Center(
                 child: ElevatedButton(
                   onPressed: _showConfirmationDialog,
-                  child: Text("Book Now",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                  child: Text("Book Now",style: TextStyle(fontWeight: FontWeight.bold),),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFFD700),
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     textStyle: TextStyle(fontSize: 18),
+                    backgroundColor:Color(0xFFFFD700),
+                    foregroundColor: Colors.black,
                   ),
                 ),
               ),
@@ -238,12 +238,12 @@ class _BusBookingPageState extends State<BusBookingPage> {
   }
 }
 
-class FacilityCard extends StatelessWidget {
+class HighlightCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
 
-  FacilityCard({required this.icon, required this.title, required this.description});
+  HighlightCard({required this.icon, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +253,7 @@ class FacilityCard extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Row(
           children: [
-            Icon(icon, size: 30, color: Colors.green),
+            Icon(icon, size: 30, color: Colors.purple),
             SizedBox(width: 10),
             Expanded(
               child: Column(

@@ -210,8 +210,7 @@ class _HomepageState extends State<Homepage> {
                         _isTapped3 = true;
                       });
                       //Navigator.push(context,MaterialPageRoute(builder: (context)=>(),));
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: (context)=>LocalServices()),);
+
                     },
                     onTapUp: (_) {
                       setState(() {
@@ -225,8 +224,7 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped3 = false;
                       });
-                       Navigator.push(context, 
-                      MaterialPageRoute(builder: (context)=>LocalServices()),);
+
                     },
                     child: Container(
                       height: 75,
@@ -753,6 +751,8 @@ class _HomepageState extends State<Homepage> {
                             setState(() {
                               _isTapped5 = false;
                             });
+
+                            Navigator.push(context,  MaterialPageRoute(builder: (context)=>LocalServices()));
                             print("Show more tapped!");
                           },
                           onTapCancel: () {

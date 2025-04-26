@@ -1,4 +1,5 @@
 import 'package:bookify/Screens/Home.dart';
+import 'package:bookify/Screens/login.dart';
 import 'package:bookify/profilepage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       
       
-      home: home(),
+      home: login(),
        locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       //theme: ThemeData.light(),

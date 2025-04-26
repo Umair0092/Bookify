@@ -1,4 +1,5 @@
 import 'package:bookify/Screens/Colors.dart';
+import 'package:bookify/Screens/login.dart';
 import 'package:flutter/material.dart';
 
 
@@ -48,7 +49,9 @@ class _ProfilepageState extends State<Profilepage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout_outlined),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>login()));
+            },
           ),
         ],
       ),
