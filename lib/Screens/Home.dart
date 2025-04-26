@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
+import 'flights/flightsearch.dart';
+
 const Color white = Colors.white; // Replace with your Colors.dart import
 
 class home extends StatefulWidget {
@@ -23,12 +25,13 @@ class _homeState extends State<home> {
     return Scaffold(
       backgroundColor: Colors.black,
       bottomNavigationBar: ConvexAppBar(
-        backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
+        backgroundColor: Color(0xFFFFD700),
         color: Colors.black,
         activeColor: Colors.black,
+        height: 66,
         items: const [
           TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.map, title: 'Discovery'),
+          TabItem(icon: Icons.map, title: 'Discover'),
           TabItem(icon: Icons.add, title: 'Add'),
           TabItem(icon: Icons.message, title: 'Message'),
           TabItem(icon: Icons.people, title: 'Profile'),
@@ -317,6 +320,7 @@ class _homeState extends State<home> {
                             setState(() {
                               _isTapped5 = false;
                             });
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>Flightsearch()));
                             print("Show more tapped!");
                           },
                           onTapCancel: () {
@@ -863,7 +867,7 @@ class _homeState extends State<home> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
