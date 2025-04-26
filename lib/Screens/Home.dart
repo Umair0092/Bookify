@@ -1,11 +1,8 @@
-import 'package:bookify/Screens/bus/bus.dart';
-import 'package:bookify/Screens/events/events.dart';
-import 'package:bookify/Screens/flights/flights.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'Colors.dart';
+
+const Color white = Colors.white; // Replace with your Colors.dart import
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -19,15 +16,17 @@ class _homeState extends State<home> {
   bool _isTapped2 = false;
   bool _isTapped3 = false;
   bool _isTapped4 = false;
+  bool _isTapped5 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Color.fromRGBO(255, 193, 7, 1),
+        backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
         color: Colors.black,
         activeColor: Colors.black,
-        items: [
+        items: const [
           TabItem(icon: Icons.home, title: 'Home'),
           TabItem(icon: Icons.map, title: 'Discovery'),
           TabItem(icon: Icons.add, title: 'Add'),
@@ -42,11 +41,11 @@ class _homeState extends State<home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
                         "Hello Name 😀\nHow are you Today",
@@ -55,7 +54,7 @@ class _homeState extends State<home> {
                     ),
                     Icon(
                       Icons.notifications,
-                      color: Color.fromRGBO(255, 193, 7, 1),
+                      color: const Color.fromRGBO(255, 193, 7, 1),
                     ),
                   ],
                 ),
@@ -67,7 +66,7 @@ class _homeState extends State<home> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        image: DecorationImage(
+                        image: const DecorationImage(
                           image: NetworkImage(
                             "https://plus.unsplash.com/premium_photo-1742945845688-7c11c2f6d33d?q=80&w=1518&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                           ),
@@ -84,16 +83,16 @@ class _homeState extends State<home> {
                   enableInfiniteScroll: true,
                   reverse: false,
                   autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayInterval: const Duration(seconds: 3),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   autoPlayCurve: Curves.fastOutSlowIn,
                   enlargeCenterPage: true,
                   enlargeFactor: 0.3,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-              SizedBox(height: 20),
-              Container(
+              const SizedBox(height: 20),
+              const Padding(
                 padding: EdgeInsets.only(left: 25),
                 child: Text(
                   "Explore Booking\nOptions and Services ",
@@ -104,185 +103,772 @@ class _homeState extends State<home> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
                     onTapDown: (_) {
                       setState(() {
                         _isTapped = true;
                       });
-                      print("down");
-                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped = false;
                       });
-
-                      print("Forgot Password tapped!");
-                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
+                      print("Flights tapped!");
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped = false;
                       });
-                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     child: Container(
-                      height: 100,
-                      width: 100,
+                      height: 75,
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      margin: const EdgeInsets.only(left: 20),
                       decoration: BoxDecoration(
-                       color:  _isTapped
-                            ? Color.fromRGBO(255, 193, 7, 0.8)
-                            : Color.fromRGBO(255, 193, 7, 1),
-                        borderRadius: BorderRadius.circular(15)
+                        color:
+                            _isTapped
+                                ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                : const Color.fromRGBO(255, 193, 7, 1),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.flight, color: Colors.black, size: 50),
-                          Text("Flights",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                          Text(
+                            "Flights",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(width: 30,),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTapDown: (_) {
                       setState(() {
                         _isTapped2 = true;
                       });
-                      print("down");
-                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped2 = false;
                       });
-                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
-                     
-                      print("Forgot Password tapped!");
+                      print("Buses tapped!");
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped2 = false;
                       });
-                       Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
                     },
                     child: Container(
-                      height: 100,
-                      width: 100,
+                      height: 75,
+                      width: MediaQuery.of(context).size.width / 2.5,
                       decoration: BoxDecoration(
-                       color:  _isTapped2
-                            ? Color.fromRGBO(255, 193, 7, 0.8)
-                            : Color.fromRGBO(255, 193, 7, 1),
-                          borderRadius: BorderRadius.circular(15)
+                        color:
+                            _isTapped2
+                                ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                : const Color.fromRGBO(255, 193, 7, 1),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.directions_bus_filled, color: Colors.black, size: 50),
-                          Text("Buses",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
-                          
+                          Icon(
+                            Icons.directions_bus_filled,
+                            color: Colors.black,
+                            size: 50,
+                          ),
+                          Text(
+                            "Buses",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
                     onTapDown: (_) {
                       setState(() {
                         _isTapped3 = true;
                       });
-                      
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped3 = false;
                       });
-                       
-                      print("Forgot Password tapped!");
+                      print("Services tapped!");
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped3 = false;
                       });
-                       
                     },
-
                     child: Container(
-                      height: 100,
-                      width: 100,
+                      height: 75,
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      margin: const EdgeInsets.only(left: 20),
                       decoration: BoxDecoration(
-                          color:  _isTapped3
-                              ? Color.fromRGBO(255, 193, 7, 0.8)
-                              : Color.fromRGBO(255, 193, 7, 1),
-                          borderRadius: BorderRadius.circular(15)
+                        color:
+                            _isTapped3
+                                ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                : const Color.fromRGBO(255, 193, 7, 1),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.design_services, color: Colors.black, size: 50),
-                          Text("Services",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                          Icon(
+                            Icons.design_services,
+                            color: Colors.black,
+                            size: 50,
+                          ),
+                          Text(
+                            "Services",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(width: 30,),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTapDown: (_) {
                       setState(() {
                         _isTapped4 = true;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => Events(),),);
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped4 = false;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => Events(),),);
-                      print("Forgot Password tapped!");
+                      print("Events tapped!");
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped4 = false;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => Events(),),);
                     },
                     child: Container(
-                      height: 100,
-                      width: 100,
+                      height: 75,
+                      width: MediaQuery.of(context).size.width / 2.5,
                       decoration: BoxDecoration(
-                          color:  _isTapped4
-                              ? Color.fromRGBO(255, 193, 7, 0.8)
-                              : Color.fromRGBO(255, 193, 7, 1),
-                          borderRadius: BorderRadius.circular(15)
+                        color:
+                            _isTapped4
+                                ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                : const Color.fromRGBO(255, 193, 7, 1),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.event, color: Colors.black, size: 50),
-                          Text("Events",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)
+                          Text(
+                            "Events",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
               Container(
-                child:Column(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
                   children: [
-
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Flights",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        ),
+                        GestureDetector(
+                          onTapDown: (_) {
+                            setState(() {
+                              _isTapped5 = true;
+                            });
+                          },
+                          onTapUp: (_) {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                            print("Show more tapped!");
+                          },
+                          onTapCancel: () {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                          },
+                          child: Text(
+                            "Show more",
+                            style: TextStyle(
+                              color:
+                                  _isTapped5
+                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                      : const Color.fromRGBO(255, 255, 255, 1),
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 150, // Adjusted to match Card content
+                      child: ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                elevation: 2.0,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        "https://media.istockphoto.com/id/155380716/photo/commercial-jet-flying-over-clouds.jpg?s=1024x1024&w=is&k=20&c=Vq45uT-uzvp1_R0RwUbSEVN6IkQwkvJKLPiQkRxWj0U=",
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) {
+                                          return Image.asset(
+                                            "images/img1.jpg",
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      left: 0,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          15,
+                                          10,
+                                          10,
+                                          10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                            Colors.white.withOpacity(0.5),
+                                              Color.fromRGBO(255, 234, 0, 1),
+                                            ],
+                                            end: Alignment.topLeft,
+                                            begin: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Source to Dest",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                            Text(
+                                              "timing",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(height: 20),
+
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Buses",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        ),
+                        GestureDetector(
+                          onTapDown: (_) {
+                            setState(() {
+                              _isTapped5 = true;
+                            });
+                          },
+                          onTapUp: (_) {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                            print("Show more tapped!");
+                          },
+                          onTapCancel: () {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                          },
+                          child: Text(
+                            "Show more",
+                            style: TextStyle(
+                              color:
+                                  _isTapped5
+                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                      : const Color.fromRGBO(255, 255, 255, 1),
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 150, // Adjusted to match Card content
+                      child: ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                elevation: 2.0,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        "https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                         fit: BoxFit.cover,
+                                        errorBuilder: (
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) {
+                                          return Image.asset(
+                                            "images/img1.jpg",
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      left: 0,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          15,
+                                          10,
+                                          10,
+                                          10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                            Colors.white.withOpacity(0.5),
+                                              Color.fromRGBO(255, 234, 0, 1),
+                                            ],
+                                            end: Alignment.topLeft,
+                                            begin: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Source to Dest",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                            Text(
+                                              "timing",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Events",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        ),
+                        GestureDetector(
+                          onTapDown: (_) {
+                            setState(() {
+                              _isTapped5 = true;
+                            });
+                          },
+                          onTapUp: (_) {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                            print("Show more tapped!");
+                          },
+                          onTapCancel: () {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                          },
+                          child: Text(
+                            "Show more",
+                            style: TextStyle(
+                              color:
+                              _isTapped5
+                                  ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                  : const Color.fromRGBO(255, 255, 255, 1),
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 150, // Adjusted to match Card content
+                      child: ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                elevation: 2.0,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                            ) {
+                                          return Image.asset(
+                                            "images/img1.jpg",
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      left: 0,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          15,
+                                          10,
+                                          10,
+                                          10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white.withOpacity(0.5),
+                                              Color.fromRGBO(255, 234, 0, 1),
+                                            ],
+                                            end: Alignment.topLeft,
+                                            begin: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Event name",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Timing",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "Price",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Services",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        ),
+                        GestureDetector(
+                          onTapDown: (_) {
+                            setState(() {
+                              _isTapped5 = true;
+                            });
+                          },
+                          onTapUp: (_) {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                            print("Show more tapped!");
+                          },
+                          onTapCancel: () {
+                            setState(() {
+                              _isTapped5 = false;
+                            });
+                          },
+                          child: Text(
+                            "Show more",
+                            style: TextStyle(
+                              color:
+                              _isTapped5
+                                  ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                  : const Color.fromRGBO(255, 255, 255, 1),
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 150, // Adjusted to match Card content
+                      child: ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                elevation: 2.0,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                            ) {
+                                          return Image.asset(
+                                            "images/img1.jpg",
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      left: 0,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          15,
+                                          10,
+                                          10,
+                                          10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                            Colors.white.withOpacity(0.5),
+                                              Color.fromRGBO(255, 234, 0, 1),
+                                            ],
+                                            end: Alignment.topLeft,
+                                            begin: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Service name",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Timing",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "Price",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
             ],
           ),
         ),
