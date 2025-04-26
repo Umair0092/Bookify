@@ -71,6 +71,7 @@ class _FlightBookingPageState extends State<FlightBookingPage> {
           ),
           TextButton(
             onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
               Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PaymentPage())); // Close the dialog
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Booking confirmed for $_ticketCount ticket(s)!",style: TextStyle(color: Colors.black),) ,margin: EdgeInsets.fromLTRB(20, 50, 20,20 ),behavior: SnackBarBehavior. floating,backgroundColor: Color(0xFFFFD700).withOpacity(0.9),),
@@ -114,24 +115,6 @@ class _FlightBookingPageState extends State<FlightBookingPage> {
         backgroundColor: Color(0xFFFFD700),
       ),
       backgroundColor: Colors.black,
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Color(0xFFFFD700),
-        color: Colors.black,
-        activeColor: Colors.black,
-        height: 66,
-        items: const [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.map, title: 'Discover'),
-          TabItem(icon: Icons.add, title: 'Add'),
-          TabItem(icon: Icons.message, title: 'Message'),
-          TabItem(icon: Icons.people, title: 'Profile'),
-        ],
-        onTap: (int i) => {
-          if(i==0){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>home()))
-          }
-        },
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

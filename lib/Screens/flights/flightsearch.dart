@@ -17,23 +17,16 @@ class _FlightsearchState extends State<Flightsearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      bottomNavigationBar: ConvexAppBar(
+      appBar: AppBar(
+        foregroundColor: Colors.black,
         backgroundColor: Color(0xFFFFD700),
-        color: Colors.black,
-        activeColor: Colors.black,
-        height: 66,
-        items: const [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.map, title: 'Discover'),
-          TabItem(icon: Icons.add, title: 'Add'),
-          TabItem(icon: Icons.message, title: 'Message'),
-          TabItem(icon: Icons.people, title: 'Profile'),
-        ],
-        onTap: (int i) => {
-          if(i==0){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>home()))
-          }
-        },
+        title: Text(
+          'Search Flights',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body:SafeArea(
         child: Padding(
@@ -41,17 +34,6 @@ class _FlightsearchState extends State<Flightsearch> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  'Search Flights',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(

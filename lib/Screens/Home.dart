@@ -24,12 +24,11 @@ class _homeState extends State<home> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Color.fromRGBO(255, 193, 7, 1),
+        backgroundColor: Color(0xFFFFD700),
         color: Colors.black,
         activeColor: Colors.black,
         items: [
           TabItem(icon: Icons.home, title: 'Home'),
-         
           TabItem(icon: Icons.message, title: 'bookings'),
           TabItem(icon: Icons.people, title: 'Profile'),
         ],

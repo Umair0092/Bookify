@@ -138,7 +138,7 @@ class _loginState extends State<login> {
               setState(() {
                 _isTapped2 = false;
               });
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>home()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>home()));
 
             },
             onTapCancel: () {
