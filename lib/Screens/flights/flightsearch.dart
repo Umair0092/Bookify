@@ -1,5 +1,7 @@
 import 'package:bookify/Screens/Colors.dart';
+import 'package:bookify/Screens/Home.dart';
 import 'package:bookify/Screens/flights/buildcard.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 class Flightsearch extends StatefulWidget {
@@ -15,6 +17,24 @@ class _FlightsearchState extends State<Flightsearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
+      bottomNavigationBar: ConvexAppBar(
+        backgroundColor: Color(0xFFFFD700),
+        color: Colors.black,
+        activeColor: Colors.black,
+        height: 66,
+        items: const [
+          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.map, title: 'Discover'),
+          TabItem(icon: Icons.add, title: 'Add'),
+          TabItem(icon: Icons.message, title: 'Message'),
+          TabItem(icon: Icons.people, title: 'Profile'),
+        ],
+        onTap: (int i) => {
+          if(i==0){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>home()))
+          }
+        },
+      ),
       body:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -72,7 +92,7 @@ class _FlightsearchState extends State<Flightsearch> {
                 child: ListView(
                   children: [
                    Buildcard(
-                      logoPath: 'flight.jpg',
+                      logoPath: 'assets/flight.jpg',
                       title: 'NEW York',
                       time: '9:00 AM',
                       route: 'JFK → LAX',
@@ -80,7 +100,7 @@ class _FlightsearchState extends State<Flightsearch> {
                       airline: 'Arrecrian Airlines',
                     ),
                   Buildcard(
-                      logoPath: 'flight.jpg',
+                      logoPath: 'assets/flight.jpg',
                       title: 'Delta',
                       time: '1:00 PM',
                       route: 'JFK → SFO',
@@ -88,7 +108,7 @@ class _FlightsearchState extends State<Flightsearch> {
                       airline: 'Greyhound',
                     ),
                     Buildcard(
-                      logoPath: 'flight.jpg',
+                      logoPath: 'assets/flight.jpg',
                       title: 'United',
                       time: '4:30 PM',
                       route: 'JFK → ORD',

@@ -21,7 +21,7 @@ class _SignupState extends State<Signup> {
         children: [
           Container(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Image.asset("images/logo.png", height: 250),
+            child: Image.asset("assets/logo.png", height: 250),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

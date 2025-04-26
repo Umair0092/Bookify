@@ -1,4 +1,5 @@
 import 'package:bookify/Screens/Colors.dart';
+import 'package:bookify/Screens/Home.dart';
 import 'package:bookify/Screens/SignUp.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class _loginState extends State<login> {
         children: [
           Container(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Image.asset("images/logo.png", height: 250),
+            child: Image.asset("assets/logo.png", height: 250),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +118,7 @@ class _loginState extends State<login> {
                 style: TextStyle(
                   color:
                       _isTapped
-                          ? Color.fromRGBO(255, 193, 7, 1)
+                          ? Color(0xFFFFD700)
                           : Colors.white70,
                   fontSize: 16,
                   decoration:
@@ -137,8 +138,8 @@ class _loginState extends State<login> {
               setState(() {
                 _isTapped2 = false;
               });
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>home()));
 
-              print("Sign up Button Pressed");
             },
             onTapCancel: () {
               setState(() {
@@ -153,7 +154,7 @@ class _loginState extends State<login> {
                 borderRadius: BorderRadius.circular(10),
                 color: _isTapped2
                     ? Color.fromRGBO(255, 193, 7, 0.8)
-                    : Color.fromRGBO(255, 193, 7, 1),
+                    : Color(0xFFFFD700),
               ),
               child: Center(child: Text("Log In ",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.black),)),
             ),
@@ -163,7 +164,7 @@ class _loginState extends State<login> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don't Have Account?",style: TextStyle(color: white.withOpacity(0.7)),),
+                Text("Don't Have Account?",style: TextStyle(color: Colors.white.withOpacity(0.7)),),
                 SizedBox(width: 5,),
                 GestureDetector(
                   onTapDown: (_) {
@@ -188,7 +189,7 @@ class _loginState extends State<login> {
                     style: TextStyle(
                       color:
                       _isTapped2
-                          ? Color.fromRGBO(255, 193, 7, 1)
+                          ? Color(0xFFFFD700)
                           : Colors.white70,
                       fontSize: 16,
                       decoration:

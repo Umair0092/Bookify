@@ -24,8 +24,9 @@ void initState() {
 Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text("Flights",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),), 
+        title:Text("Flight",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
         centerTitle: true,
+
       ),
         body:  SingleChildScrollView(
            padding: const EdgeInsets.all(16.0),
