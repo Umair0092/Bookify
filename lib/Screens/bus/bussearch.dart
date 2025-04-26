@@ -1,6 +1,8 @@
 import 'package:bookify/Screens/Colors.dart';
 import 'package:flutter/material.dart';
 
+import 'Buses_Detais.dart';
+
 //import 'package:book/ui/colors.dart';
 
 
@@ -83,6 +85,7 @@ class _BussearchState extends State<Bussearch> {
                       route: 'Washington',
                       duration: '6h20 min',
                       date: 'April 24, 2024',
+                     context: context
                     ),
                   buildFlightCard(
                       
@@ -91,6 +94,7 @@ class _BussearchState extends State<Bussearch> {
                       route: 'Boston',
                       duration: '6h20 min',
                      date:'April 24, 2024',
+                      context: context
                     ),
                     buildFlightCard(
                     
@@ -99,6 +103,7 @@ class _BussearchState extends State<Bussearch> {
                       route: 'New York',
                       duration: '6h20 min',
                       date: 'April 24, 2024',
+                        context: context
                     ),
                   ],
                 ),
@@ -120,49 +125,49 @@ Widget buildFlightCard({
     required String time,
     required String route,
     required String duration,
-    required String date
+    required String date,
+    required  context,
   }) {
-    return  Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text(route, style: TextStyle(color: Colors.white70)),
-                  Text(date, style: TextStyle(color: Colors.white60)),
-                ],
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(time, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              Text(duration, style: TextStyle(color: Colors.white70)),
-              SizedBox(height: 4),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFD700),
-                  borderRadius: BorderRadius.circular(8),
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>BusBookingPage()));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    Text(route, style: TextStyle(color: Colors.white70)),
+                    Text(date, style: TextStyle(color: Colors.white60)),
+                  ],
                 ),
-                child: Text('Select', style: TextStyle(fontWeight: FontWeight.bold)),
-              )
-            ],
-          )
-        ],
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(time, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                Text(duration, style: TextStyle(color: Colors.white70)),
+                SizedBox(height: 4),
+
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -45,7 +45,7 @@ Widget build(BuildContext context) {
                   //color: const Color.fromARGB(255, 17, 111, 42),
                   //child: Image.asset('flights.jpg',fit:BoxFit.fill,),
                   decoration: BoxDecoration(
-                    image: DecorationImage(image:AssetImage("flight.jpg"),fit: BoxFit.fill),
+                    image: DecorationImage(image:AssetImage("assets/flight.jpg"),fit: BoxFit.fill),
                     borderRadius: BorderRadius.circular(10.0),
                     boxShadow:[ BoxShadow(blurStyle: BlurStyle.normal)]
                   ),

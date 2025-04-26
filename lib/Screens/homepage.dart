@@ -4,6 +4,7 @@ import 'package:bookify/Screens/flights/flights.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
+import 'bus/bussearch.dart';
 import 'flights/flightsearch.dart';
 
 const Color white = Colors.white; // Replace with your Colors.dart import
@@ -108,7 +109,6 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped = true;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     onTapUp: (_) {
                       setState(() {
@@ -121,7 +121,6 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped = false;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
                     },
                     child: Container(
                       height: 75,
@@ -155,7 +154,7 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped2 = true;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
+
                     },
                     onTapUp: (_) {
                       setState(() {
@@ -168,7 +167,6 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped2 = false;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
                     },
                     child: Container(
                       height: 75,
@@ -461,6 +459,7 @@ class _HomepageState extends State<Homepage> {
                             setState(() {
                               _isTapped5 = false;
                             });
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>Bussearch()));
                             print("Show more tapped!");
                           },
                           onTapCancel: () {
