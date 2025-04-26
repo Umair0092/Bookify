@@ -35,24 +35,27 @@ class _EventssearchState extends State<Eventssearch> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        title: Text(
+                  'Search Events',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),),
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      //backgroundColor: backgroundColor,
       body:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  'Search Events',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
+              
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(12),

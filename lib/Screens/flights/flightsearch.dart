@@ -15,23 +15,25 @@ class _FlightsearchState extends State<Flightsearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        title: Text(
+                  'Search Flights',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),),
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
       body:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  'Search Flights',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
+             
               Row(
                 children: [
                   Expanded(
