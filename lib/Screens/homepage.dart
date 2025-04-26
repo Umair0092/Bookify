@@ -1,6 +1,7 @@
 import 'package:bookify/Screens/bus/bus.dart';
 import 'package:bookify/Screens/events/events.dart';
 import 'package:bookify/Screens/flights/flights.dart';
+import 'package:bookify/Screens/localservice/localservices.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -209,17 +210,23 @@ class _HomepageState extends State<Homepage> {
                         _isTapped3 = true;
                       });
                       //Navigator.push(context,MaterialPageRoute(builder: (context)=>(),));
+                      Navigator.push(context, 
+                      MaterialPageRoute(builder: (context)=>LocalServices()),);
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped3 = false;
                       });
                       print("Services tapped!");
+                       Navigator.push(context, 
+                      MaterialPageRoute(builder: (context)=>LocalServices()),);
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped3 = false;
                       });
+                       Navigator.push(context, 
+                      MaterialPageRoute(builder: (context)=>LocalServices()),);
                     },
                     child: Container(
                       height: 75,
