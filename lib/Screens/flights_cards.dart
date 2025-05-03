@@ -78,23 +78,26 @@ class FlightCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Header: Airline and Flight Number
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          flight.airline,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
+                    Container(
+                      margin:EdgeInsets.only(top: 18),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            flight.airline,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
-                        ),
-                        Text(
-                          flight.flightNumber,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.secondary,
+                          Text(
+                            flight.flightNumber,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.secondary,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 8),
                     // Route: Departure and Destination

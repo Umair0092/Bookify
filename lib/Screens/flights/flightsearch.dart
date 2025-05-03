@@ -4,6 +4,10 @@ import 'package:bookify/Screens/flights/buildcard.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/flights.dart';
+import '../flights_cards.dart';
+import 'flight_details_page.dart';
+
 class Flightsearch extends StatefulWidget {
   const Flightsearch({super.key});
 
@@ -13,6 +17,26 @@ class Flightsearch extends StatefulWidget {
 
 class _FlightsearchState extends State<Flightsearch> {
   final TextStyle whiteTextStyle = TextStyle(color: Colors.white);
+  late List<Flight> _flights;
+  bool _isLoading = false;
+  Future<void> flightsdata() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _flights = await Fectchdata.fetchFlightData();
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    flightsdata();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,37 +94,35 @@ class _FlightsearchState extends State<Flightsearch> {
                 child: Text('April 24, 2024', style: whiteTextStyle),
               ),
               SizedBox(height: 20),
-               Expanded(
-                child: ListView(
-                  children: [
-                   Buildcard(
-                      logoPath: 'assets/flight.jpg',
-                      title: 'NEW York',
-                      time: '9:00 AM',
-                      route: 'JFK → LAX',
-                      duration: '6h20 min',
-                      airline: 'Arrecrian Airlines',
-                    ),
-                  Buildcard(
-                      logoPath: 'assets/flight.jpg',
-                      title: 'Delta',
-                      time: '1:00 PM',
-                      route: 'JFK → SFO',
-                      duration: '6h20 min',
-                      airline: 'Greyhound',
-                    ),
-                    Buildcard(
-                      logoPath: 'assets/flight.jpg',
-                      title: 'United',
-                      time: '4:30 PM',
-                      route: 'JFK → ORD',
-                      duration: '6h20 min',
-                      airline: 'FlixBus',
-                    ),
-                  ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.27,
+
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _flights.isEmpty
+                    ? const Center(child: Text('No flights available'))
+                    : ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  //scrollDirection: Axis.vertical,
+                  itemCount: _flights.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final flight = _flights[index];
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.9,// Dynamic height
+                      child: FlightCard(
+                        flight: flight,
+                        onBookNow: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>FlightBookingPage(flight: flight,)));
+                          // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen(flight: flight)));
+                        },
+                      ),
+                    );
+                  },
                 ),
-              )
-             
+              ),
+
             ],
           ),
         ),

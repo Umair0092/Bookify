@@ -2,7 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import '../../services/flights.dart';
 import '../Home.dart';
-import '../payments/payment.dart';
+import 'paymentsflights.dart';
 
 
 class FlightBookingPage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _FlightBookingPageState extends State<FlightBookingPage> {
     }
   }
 
-  void _showDialog() {
+  void _showDialog(Flight flight,int numTickets) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -80,7 +80,7 @@ class _FlightBookingPageState extends State<FlightBookingPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => PaymentPage()));
+                    .push(MaterialPageRoute(builder: (context) => PaymentPage(flight: flight,numberOfPassengers: numTickets,)));
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -329,7 +329,9 @@ class _FlightBookingPageState extends State<FlightBookingPage> {
               // Book Now Button
               Center(
                 child: ElevatedButton(
-                  onPressed: _showDialog,
+                  onPressed: (){
+                    _showDialog(widget.flight,_ticketCount);
+                  },
                   child: Text("Book Now",
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
