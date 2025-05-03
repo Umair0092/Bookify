@@ -20,7 +20,7 @@ class Buildcard extends StatelessWidget {
   Widget build(BuildContext context) {
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>FlightBookingPage()));
+        //Navigator.push(context, MaterialPageRoute(builder: (context)=>FlightBookingPage()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),

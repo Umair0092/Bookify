@@ -2,11 +2,14 @@ import 'package:bookify/Screens/bus/bus.dart';
 import 'package:bookify/Screens/events/events.dart';
 import 'package:bookify/Screens/flights/flights.dart';
 import 'package:bookify/Screens/localservice/localservices.dart';
+import 'package:bookify/services/flights.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'bus/bussearch.dart';
+import 'flights/flight_details_page.dart';
 import 'flights/flightsearch.dart';
+import 'flights_cards.dart';
 
 const Color white = Colors.white; // Replace with your Colors.dart import
 
@@ -17,22 +20,38 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
-
- 
-
 class _HomepageState extends State<Homepage> {
- 
   bool _isTapped = false;
   bool _isTapped2 = false;
   bool _isTapped3 = false;
   bool _isTapped4 = false;
   bool _isTapped5 = false;
+  late List<Flight> _flights;
+  bool _isLoading = false;
+  Future<void> flightsdata() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _flights = await Fectchdata.fetchFlightData();
+    print(_flights[0].servicesOffered.toString());
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("fligt data");
+    flightsdata();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-    
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -116,7 +135,10 @@ class _HomepageState extends State<Homepage> {
                         _isTapped = false;
                       });
                       print("Flights tapped!");
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Flightsui(),));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Flightsui()),
+                      );
                     },
                     onTapCancel: () {
                       setState(() {
@@ -155,14 +177,16 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped2 = true;
                       });
-
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped2 = false;
                       });
                       print("Buses tapped!");
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Bus(),));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Bus()),
+                      );
                     },
                     onTapCancel: () {
                       setState(() {
@@ -210,21 +234,23 @@ class _HomepageState extends State<Homepage> {
                         _isTapped3 = true;
                       });
                       //Navigator.push(context,MaterialPageRoute(builder: (context)=>(),));
-
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped3 = false;
                       });
                       print("Services tapped!");
-                       Navigator.push(context, 
-                      MaterialPageRoute(builder: (context)=>LocalServices()),);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LocalServices(),
+                        ),
+                      );
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped3 = false;
                       });
-
                     },
                     child: Container(
                       height: 75,
@@ -262,20 +288,29 @@ class _HomepageState extends State<Homepage> {
                       setState(() {
                         _isTapped4 = true;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Events(),));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Events()),
+                      );
                     },
                     onTapUp: (_) {
                       setState(() {
                         _isTapped4 = false;
                       });
                       print("Events tapped!");
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Events(),));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Events()),
+                      );
                     },
                     onTapCancel: () {
                       setState(() {
                         _isTapped4 = false;
                       });
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Events(),));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Events()),
+                      );
                     },
                     child: Container(
                       height: 75,
@@ -326,7 +361,12 @@ class _HomepageState extends State<Homepage> {
                             setState(() {
                               _isTapped5 = false;
                             });
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=>Flightsearch()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Flightsearch(),
+                              ),
+                            );
                           },
                           onTapCancel: () {
                             setState(() {
@@ -348,93 +388,32 @@ class _HomepageState extends State<Homepage> {
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-                      height: 150, // Adjusted to match Card content
-                      child: ListView.builder(
-                        itemCount: 10,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
+                      height: MediaQuery.of(context).size.height * 0.27,
+
+                      child: _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : _flights.isEmpty
+                          ? const Center(child: Text('No flights available'))
+                          : ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _flights.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final flight = _flights[index];
+                              return SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.27,
+                                width: MediaQuery.of(context).size.width * 0.9,// Dynamic height
+                                child: FlightCard(
+                                  flight: flight,
+                                  onBookNow: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>FlightBookingPage(flight: flight,)));
+                                    // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen(flight: flight)));
+                                  },
                                 ),
-                                elevation: 2.0,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        "https://media.istockphoto.com/id/155380716/photo/commercial-jet-flying-over-clouds.jpg?s=1024x1024&w=is&k=20&c=Vq45uT-uzvp1_R0RwUbSEVN6IkQwkvJKLPiQkRxWj0U=",
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) {
-                                          return Image.asset(
-                                            "images/img1.jpg",
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      left: 0,
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                          15,
-                                          10,
-                                          10,
-                                          10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                            Colors.white.withOpacity(0.5),
-                                              Color.fromRGBO(255, 234, 0, 1),
-                                            ],
-                                            end: Alignment.topLeft,
-                                            begin: Alignment.bottomRight,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Source to Dest",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17,
-                                              ),
-                                            ),
-                                            Text(
-                                              "timing",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                              );
+                            },
+                          ),
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -464,7 +443,12 @@ class _HomepageState extends State<Homepage> {
                             setState(() {
                               _isTapped5 = false;
                             });
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>Bussearch()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Bussearch(),
+                              ),
+                            );
                             print("Show more tapped!");
                           },
                           onTapCancel: () {
@@ -507,7 +491,7 @@ class _HomepageState extends State<Homepage> {
                                       borderRadius: BorderRadius.circular(15),
                                       child: Image.network(
                                         "https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                         fit: BoxFit.cover,
+                                        fit: BoxFit.cover,
                                         errorBuilder: (
                                           context,
                                           error,
@@ -534,7 +518,7 @@ class _HomepageState extends State<Homepage> {
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
-                                            Colors.white.withOpacity(0.5),
+                                              Colors.white.withOpacity(0.5),
                                               Color.fromRGBO(255, 234, 0, 1),
                                             ],
                                             end: Alignment.topLeft,
@@ -613,9 +597,9 @@ class _HomepageState extends State<Homepage> {
                             "Show more",
                             style: TextStyle(
                               color:
-                              _isTapped5
-                                  ? const Color.fromRGBO(255, 193, 7, 0.8)
-                                  : const Color.fromRGBO(255, 255, 255, 1),
+                                  _isTapped5
+                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                      : const Color.fromRGBO(255, 255, 255, 1),
                               fontSize: 17,
                             ),
                           ),
@@ -646,10 +630,10 @@ class _HomepageState extends State<Homepage> {
                                         "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                                         fit: BoxFit.cover,
                                         errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                            ) {
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) {
                                           return Image.asset(
                                             "images/img1.jpg",
                                             fit: BoxFit.cover,
@@ -683,7 +667,7 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               "Event name",
@@ -694,7 +678,9 @@ class _HomepageState extends State<Homepage> {
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
                                                   "Timing",
@@ -752,7 +738,12 @@ class _HomepageState extends State<Homepage> {
                               _isTapped5 = false;
                             });
 
-                            Navigator.push(context,  MaterialPageRoute(builder: (context)=>LocalServices()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LocalServices(),
+                              ),
+                            );
                             print("Show more tapped!");
                           },
                           onTapCancel: () {
@@ -764,9 +755,9 @@ class _HomepageState extends State<Homepage> {
                             "Show more",
                             style: TextStyle(
                               color:
-                              _isTapped5
-                                  ? const Color.fromRGBO(255, 193, 7, 0.8)
-                                  : const Color.fromRGBO(255, 255, 255, 1),
+                                  _isTapped5
+                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                      : const Color.fromRGBO(255, 255, 255, 1),
                               fontSize: 17,
                             ),
                           ),
@@ -797,10 +788,10 @@ class _HomepageState extends State<Homepage> {
                                         "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                                         fit: BoxFit.cover,
                                         errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                            ) {
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) {
                                           return Image.asset(
                                             "images/img1.jpg",
                                             fit: BoxFit.cover,
@@ -822,7 +813,7 @@ class _HomepageState extends State<Homepage> {
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
-                                            Colors.white.withOpacity(0.5),
+                                              Colors.white.withOpacity(0.5),
                                               Color.fromRGBO(255, 234, 0, 1),
                                             ],
                                             end: Alignment.topLeft,
@@ -834,7 +825,7 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               "Service name",
@@ -845,7 +836,9 @@ class _HomepageState extends State<Homepage> {
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
                                                   "Timing",
@@ -880,7 +873,6 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               const SizedBox(height: 20),
-
             ],
           ),
         ),

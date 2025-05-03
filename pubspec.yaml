@@ -43,6 +43,7 @@ dependencies:
   flutter_signin_button:
   shared_preferences:
   cloud_firestore:
+  connectivity_plus: ^6.0.5
   sign_button: ^2.0.6
   uuid:
 dev_dependencies:

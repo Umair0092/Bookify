@@ -1,6 +1,7 @@
 import 'package:bookify/Screens/Colors.dart';
 import 'package:bookify/Screens/Home.dart';
 import 'package:bookify/Screens/SignUp.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class _loginState extends State<login> {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>home()));
       }on FirebaseAuthException catch(e){
         String message;
+        debugPrint('Login error: $e');
         switch (e.code) {
           case 'user-not-found':
             message = 'No user found with this email.';
@@ -67,9 +69,13 @@ class _loginState extends State<login> {
             SnackBar(content: Text(message)),
           );
         }
+        setState(() {
+          _isloading = false;
+        });
     }
       }
   }
+
   Future<void> _Passwordreset()async{
     final TextEditingController _resetEmailController = TextEditingController();
     bool _dialogLoading = false;
@@ -365,7 +371,31 @@ class _loginState extends State<login> {
                   ],
                 ),
               ),
-
+              SizedBox(height: 20,),
+              SignInButton(
+                  buttonType: ButtonType.google,
+                  imagePosition: ImagePosition.right,
+                  //[buttonSize] You can also use this in combination with [width]. Increases the font and icon size of the button.
+                  buttonSize: ButtonSize.large,
+                  btnTextColor: Colors.purple,
+                  btnColor: Colors.white,
+                  width: 240,
+                  //[width] Use if you change the text value.
+                  //btnText: 'Pinterest',
+                  onPressed: () async{
+                    await signInWithGoogle();
+                    final User? currentUser=await _auth.currentUser;
+                    LocalDataSaver.saveLoginData(true);
+                    LocalDataSaver.saveImg(currentUser!.photoURL.toString());
+                    LocalDataSaver.saveMail(currentUser.email.toString());
+                    LocalDataSaver.saveName(currentUser.displayName.toString());
+                    LocalDataSaver.saveSyncValue(false);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => home()),
+                          (Route<dynamic> route) => false,
+                    );
+                  })
             ],
           ),
         ),
