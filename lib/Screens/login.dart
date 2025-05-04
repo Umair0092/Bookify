@@ -211,6 +211,7 @@ class _loginState extends State<login> {
                   SizedBox(width: 50),
                   Expanded(
                     child: TextFormField(
+                      controller: _emailController,
                       textInputAction: TextInputAction.search,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -257,7 +258,7 @@ class _loginState extends State<login> {
                   Expanded(
                     child: TextFormField(
                       textInputAction: TextInputAction.search,
-
+                      controller: _passwordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';

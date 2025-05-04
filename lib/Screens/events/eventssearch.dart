@@ -1,12 +1,22 @@
 
 import 'package:bookify/Screens/Colors.dart';
 import 'package:bookify/Screens/payments/payment.dart';
+import 'package:bookify/services/eventservices.dart';
 import 'package:flutter/material.dart';
 
 import 'event_details.dart';
 
 class Eventssearch extends StatefulWidget {
-  const Eventssearch({super.key});
+  final String category;
+  final String date;
+
+  const Eventssearch({
+    super.key,
+    required this.category,
+    required this.date,
+  });
+  //const Eventssearch({super.key});
+
 
   @override
   State<Eventssearch> createState() => _EventssearchState();
@@ -14,26 +24,14 @@ class Eventssearch extends StatefulWidget {
 
 class _EventssearchState extends State<Eventssearch> {
    final TextStyle whiteTextStyle = TextStyle(color: Colors.white);
-  final List<Map<String, String>> events = [
-    {
-      'artist': 'Coldplay',
-      'tour': 'Music of Spriieres Tour',
-      'time': '7:00 PM',
-      'image': 'assets/bus.jpg',
-    },
-    {
-      'artist': 'Ed Sheeran',
-      'tour': '',
-      'time': '6:00 PM',
-      'image': 'assets/flight.jpg',
-    },
-    {
-      'artist': 'Billie Eilish',
-      'tour': '',
-      'time': '9:00 PM',
-      'image': 'assets/flight.jpg',
-    },
-  ];
+   late Future<List<Eventmodel>> futureevents;
+  
+
+   @override
+  void initState() {
+    super.initState();
+    futureevents = EventService().fetchevents();
+  }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -65,7 +63,7 @@ class _EventssearchState extends State<Eventssearch> {
                   color: cardColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text('Location', style: whiteTextStyle),//will get data by navigaotr .push
+                child: Text(widget.category, style: whiteTextStyle),//will get data by navigaotr .push
               ),
               SizedBox(height: 10),
               Container(
@@ -75,25 +73,43 @@ class _EventssearchState extends State<Eventssearch> {
                   color: cardColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text('April 24, 2024', style: whiteTextStyle),
+                child: Text(widget.date, style: whiteTextStyle,),
               ),
               SizedBox(height: 20),
              Expanded(
        
-        child: ListView.builder(
-          // padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            final event = events[index];
-            return buildeventcard(
-              artist: event['artist']!,
-              tour: event['tour']!,
-              time: event['time']!,
-              imagePath: event['image']!,
-              mycontext: context,
-            );
-          },
-        ),),
+               child:FutureBuilder(future: futureevents,
+                builder: (context,snapshot)
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No events available'));
+                    }
+
+                    final filtered = snapshot.data!.where((events) =>
+                      events.category==widget.category.toLowerCase()&&
+                      events.date == widget.date).toList();
+                     if (filtered.isEmpty) {
+                      
+                      return Center(child: Text("No matching events for your search."));
+                    }
+                    return ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder:(context,index)
+                      {
+                        final event=filtered[index];
+                        return buildeventcard(artist: event.artist,eventname: event.eventname,eventid: event.id,
+                         place: event.place, time: event.time, imagePath: "assets/flight.jpg", mycontext: context);
+                      }
+                    );
+                },
+                )
+               ),
       
              
               
@@ -113,16 +129,18 @@ class _EventssearchState extends State<Eventssearch> {
 
 Widget buildeventcard({
   required String artist,
-  required String tour,
+  required String place,
+  required String eventname,
   required String time,
   required String imagePath,
+  required String eventid,
   required BuildContext mycontext,
 }
 )
 {
  return GestureDetector(
    onTap: (){
-     Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext)=>EventBookingPage()));
+     Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext)=>EventBookingPage(eventid: eventid,)));
    },
    child: Card(
         color: Colors.grey[900],
@@ -134,7 +152,7 @@ Widget buildeventcard({
               borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
               child: Image.asset(
                 imagePath,
-                width: 120,
+                width: 100,
                 height: 120,
                 fit: BoxFit.cover,
               ),
@@ -146,16 +164,23 @@ Widget buildeventcard({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      artist,
+                      eventname,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (tour.isNotEmpty)
+                    Text(
+                    artist,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 15,
+                    ),
+                  ),
+                    if (place.isNotEmpty)
                       Text(
-                        tour,
+                        place,
                         style: TextStyle(
                           color: Colors.grey[400],
                           fontSize: 14,
@@ -178,7 +203,7 @@ Widget buildeventcard({
                   foregroundColor: Colors.black,
                 ),
                 onPressed: () {
-                  Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext) => PaymentPage(),),);
+                  Navigator.push(mycontext, MaterialPageRoute(builder: (mycontext) => EventBookingPage(eventid: eventid,),),);
                 },
                 child: Text('Select'),
               ),

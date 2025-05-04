@@ -36,6 +36,7 @@ Future<User?> signInWithGoogle() async
   }catch(e){
     print(e);
   }
+  return null;
 
 }
 

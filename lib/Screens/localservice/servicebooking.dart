@@ -3,23 +3,21 @@ import 'package:flutter/material.dart';
 
 class Servicebooking extends StatefulWidget {
   final String companyName;
+  List<String> availableTimes;
+  final int rate;
 
-  Servicebooking({super.key, required this.companyName});
+
+  Servicebooking({super.key, required this.companyName,required this.availableTimes,required this.rate});
 
   @override
   _ServicebookingState createState() => _ServicebookingState();
 }
 
 class _ServicebookingState extends State<Servicebooking> {
-  List<String> availableTimes = [
-    "10:00 AM",
-    "12:00 PM",
-    "2:00 PM",
-    "4:00 PM",
-  ];
+  
 
   String? selectedTime;
-  double perHourRate = 50; 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +60,7 @@ class _ServicebookingState extends State<Servicebooking> {
                   dropdownColor: backgroundColor,
                   value: selectedTime,
                   hint: Text('Choose Time', style: TextStyle(color: Colors.white)),
-                  items: availableTimes.map((time) {
+                  items: widget.availableTimes.map((time) {
                     return DropdownMenuItem(
                       value: time,
                       child: Text(time, style: TextStyle(color: Colors.white)),
@@ -87,7 +85,7 @@ class _ServicebookingState extends State<Servicebooking> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    '\$${perHourRate.toStringAsFixed(2)}',
+                    '\$${widget.rate.toStringAsFixed(2)}',
                     style: TextStyle(color: Colors.yellow, fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 30),

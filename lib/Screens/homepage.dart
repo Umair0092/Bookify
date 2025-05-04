@@ -1,7 +1,10 @@
 import 'package:bookify/Screens/bus/bus.dart';
+import 'package:bookify/Screens/bus/bushomepagecard.dart';
+import 'package:bookify/Screens/events/eventhomepagecar.dart';
 import 'package:bookify/Screens/events/events.dart';
 import 'package:bookify/Screens/flights/flights.dart';
 import 'package:bookify/Screens/localservice/localservices.dart';
+import 'package:bookify/Screens/localservice/locservcar.dart';
 import 'package:bookify/services/flights.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -446,7 +449,7 @@ class _HomepageState extends State<Homepage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Bussearch(),
+                                builder: (context) => Bus(),
                               ),
                             );
                             print("Show more tapped!");
@@ -469,101 +472,21 @@ class _HomepageState extends State<Homepage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 150, // Adjusted to match Card content
-                      child: ListView.builder(
-                        itemCount: 10,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                elevation: 2.0,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        "https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) {
-                                          return Image.asset(
-                                            "images/img1.jpg",
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      left: 0,
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                          15,
-                                          10,
-                                          10,
-                                          10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.white.withOpacity(0.5),
-                                              Color.fromRGBO(255, 234, 0, 1),
-                                            ],
-                                            end: Alignment.topLeft,
-                                            begin: Alignment.bottomRight,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Source to Dest",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17,
-                                              ),
-                                            ),
-                                            Text(
-                                              "timing",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                   // const SizedBox(height: 10),
+                    Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                       
+                        BusHorizontalList(),
+                      ],
+                    ),),
+                    //const SizedBox(height: 10),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+             // const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////////////////////////////////////////////////
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -586,6 +509,11 @@ class _HomepageState extends State<Homepage> {
                             setState(() {
                               _isTapped5 = false;
                             });
+                             Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Events(),
+                              ),);
                             print("Show more tapped!");
                           },
                           onTapCancel: () {
@@ -606,115 +534,21 @@ class _HomepageState extends State<Homepage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 150, // Adjusted to match Card content
-                      child: ListView.builder(
-                        itemCount: 10,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                elevation: 2.0,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) {
-                                          return Image.asset(
-                                            "images/img1.jpg",
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      left: 0,
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                          15,
-                                          10,
-                                          10,
-                                          10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.white.withOpacity(0.5),
-                                              Color.fromRGBO(255, 234, 0, 1),
-                                            ],
-                                            end: Alignment.topLeft,
-                                            begin: Alignment.bottomRight,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Event name",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17,
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "Timing",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Price",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                    //const SizedBox(height: 10),
+                     Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                       
+                        eventhorizontal(),
+                      ],
+                    ),),
+                    //const SizedBox(height: 10),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              //const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////////////////////////////////////////////////
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -764,110 +598,15 @@ class _HomepageState extends State<Homepage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 150, // Adjusted to match Card content
-                      child: ListView.builder(
-                        itemCount: 10,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                elevation: 2.0,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) {
-                                          return Image.asset(
-                                            "images/img1.jpg",
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      left: 0,
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                          15,
-                                          10,
-                                          10,
-                                          10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.white.withOpacity(0.5),
-                                              Color.fromRGBO(255, 234, 0, 1),
-                                            ],
-                                            end: Alignment.topLeft,
-                                            begin: Alignment.bottomRight,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Service name",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17,
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "Timing",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Price",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                     Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                       
+                        localhoizontal(),
+                      ],
+                    ),),
                     const SizedBox(height: 10),
                   ],
                 ),

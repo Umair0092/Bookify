@@ -10,9 +10,9 @@ class Events extends StatefulWidget {
 }
 
 class _EventsState extends State<Events> {
-   String dropdownvalue = 'sportsgala';
+   String dropdownvalue = 'sports';
   var  items = [
-      'sportsgala',
+      'sports',
       'concert'
   ];
   DateTime selecteddate=DateTime.now();
@@ -25,11 +25,17 @@ void initState() {
   super.initState();
   _dateController.text = formatDate(selecteddate); // initial value
 }
+@override
+  void dispose() {
+    _dateController.dispose();
+    
+    super.dispose();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text("Flights",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),), 
+        title:Text("Events",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),), 
         centerTitle: true,
       ),
         body:  SingleChildScrollView(
@@ -39,8 +45,8 @@ void initState() {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
             
-               Text("Events",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
-               SizedBox(height: 10,),
+               //Text("Events",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+               //SizedBox(height: 10,),
                 Container(
                   height: 300,
                   //padding: EdgeInsets.all(9.0),
@@ -137,7 +143,10 @@ void initState() {
               onPressed: () {
                 // Your action here
                 Navigator.push(context, 
-                MaterialPageRoute(builder: (context)=>Eventssearch()));
+                MaterialPageRoute(builder: (context)=>Eventssearch(
+                  category: dropdownvalue,
+                  date: _dateController.text,
+                )));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:searchbutton, 
@@ -147,7 +156,7 @@ void initState() {
                 elevation: 0, 
               ),
               child: Text(
-                'Search Flights',
+                'Search Events',
                 style: TextStyle(
           color: Colors.white,
           fontSize: 16,

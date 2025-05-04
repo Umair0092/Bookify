@@ -1,21 +1,46 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../payments/payment.dart';
 
 
 class EventBookingPage extends StatefulWidget {
+  final String eventid;
+  
+  const EventBookingPage({Key? key, required this.eventid}) : super(key: key);
   @override
   _EventBookingPageState createState() => _EventBookingPageState();
 }
 
 class _EventBookingPageState extends State<EventBookingPage> {
   int _ticketCount = 1;
-  final double _singleTicketCost = 50.0; // Cost of a single event ticket in dollars
-
+  double _singleTicketCost = 0.0; // Cost of a single event ticket in dollars
+  String title = "";
+  double totalticket=0;
+  List<dynamic> highlights = [];
+  @override
+  void initState() {
+    super.initState();
+    _fetcheventdetails();
+  }
+  Future<void> _fetcheventdetails() async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('events').doc(widget.eventid).get();
+    if (doc.exists) {
+      setState(() {
+        title = doc['title'] ?? '';
+        totalticket=(doc['ticket'] as num?)?.toDouble() ?? 0.0;
+        print(totalticket);
+        _singleTicketCost = (doc['cost'] as num?)?.toDouble() ?? 0.0;
+        highlights = doc['highlights'] ?? [];
+      });
+    }
+  }
   void _incrementTickets() {
-    setState(() {
-      _ticketCount++;
-    });
+    if (_ticketCount <totalticket) {
+      setState(() {
+        _ticketCount++;
+      });
+    }
   }
 
   void _decrementTickets() {
@@ -138,26 +163,28 @@ class _EventBookingPageState extends State<EventBookingPage> {
               ),
               SizedBox(height: 20),
               // Event Highlights Section
+             Center(
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: 20),
+              // Event Highlights Section
               Text(
                 "Event Highlights",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
-              HighlightCard(
-                icon: Icons.music_note,
-                title: "Live Performances",
-                description: "Enjoy live music or thrilling sports action.",
-              ),
-              HighlightCard(
-                icon: Icons.local_dining,
-                title: "Food & Beverages",
-                description: "A variety of food stalls and drinks available.",
-              ),
-              HighlightCard(
-                icon: Icons.star,
-                title: "VIP Experience",
-                description: "Exclusive seating and special access for VIPs.",
-              ),
+               ...highlights.map((f) => HighlightCard(
+                    icon: Icons.check_circle_outline,
+                    title: f,
+                    description: '',
+                  )),
+
+
+        
+              
               SizedBox(height: 20),
               // Ticket Quantity Selector
               Text(
@@ -253,7 +280,7 @@ class HighlightCard extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Row(
           children: [
-            Icon(icon, size: 30, color: Colors.purple),
+            Icon(_getIconFromName(title), size: 30, color: Colors.purple),
             SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -265,7 +292,7 @@ class HighlightCard extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    description,
+                    getdesc(title),
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
@@ -276,4 +303,34 @@ class HighlightCard extends StatelessWidget {
       ),
     );
   }
+}
+IconData _getIconFromName(String iconName) {
+    print(iconName);
+    switch (iconName.toLowerCase()) {
+      case 'food & beverages':
+        //print("wifi");
+        return Icons.local_dining;
+      case 'vip experience':
+        return Icons.stars_outlined;
+      case 'live performance':
+        //print("air");
+        return Icons.music_note_outlined;
+      default:
+        return Icons.info;
+    }
+}
+String getdesc(String name)
+{
+switch (name.toLowerCase()) {
+      case 'food & beverages':
+        //print("wifi");
+        return "A variety of food stalls and drinks available.";
+      case 'vip experience':
+        return "Exclusive seating and special access for VIPs.";
+      case 'live performance':
+        //print("air");
+        return "Enjoy live music or thrilling sports action.";
+      default:
+        return "";
+    }
 }

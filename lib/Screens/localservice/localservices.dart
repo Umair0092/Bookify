@@ -1,5 +1,6 @@
 import 'package:bookify/Screens/Colors.dart';
 import 'package:bookify/Screens/localservice/servicebooking.dart';
+import 'package:bookify/services/localservice.dart';
 import 'package:flutter/material.dart';
 
 class LocalServices extends StatefulWidget {
@@ -8,25 +9,51 @@ class LocalServices extends StatefulWidget {
 }
 
 class _LocalServicesState extends State<LocalServices> with SingleTickerProviderStateMixin {
-  List<Map<String, dynamic>> companies = [];
+  List<localServicemodel> companies = [];
   String selectedService = "Plumber"; // Default service
   TextEditingController locationController = TextEditingController();
-
-  late AnimationController _controller;
-  //late Animation<double> _fadeAnimation;
+  final Localserv _localserv = Localserv();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    updateCompanies(); // <-- Important
+    updateCompanies();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     locationController.dispose();
     super.dispose();
   }
+
+  Future<void> updateCompanies() async {
+  setState(() {
+    isLoading = true;
+  });
+  try {
+    List<localServicemodel> fetchedCompanies = await _localserv.fetchlocal();
+    String locationQuery = locationController.text.trim().toLowerCase();
+    print(locationQuery);
+
+    setState(() {
+      companies = fetchedCompanies
+          .where((company) =>
+              company.services.contains(selectedService) &&
+              (locationQuery.isEmpty || company.loc.toLowerCase().contains(locationQuery)))
+          .toList();
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      isLoading = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error fetching services: $e')),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +63,11 @@ class _LocalServicesState extends State<LocalServices> with SingleTickerProvider
         backgroundColor: backgroundColor,
         elevation: 0,
         title: Text('Select a Company', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white)),
-         leading: IconButton(icon: Icon(Icons.arrow_back_outlined,color: Colors.white,),
-        onPressed: () 
-        {
-          Navigator.pop(context);
-        },
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_outlined, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(
@@ -51,7 +78,7 @@ class _LocalServicesState extends State<LocalServices> with SingleTickerProvider
             SizedBox(height: 16),
             buildLocationField(),
             SizedBox(height: 16),
-            Expanded(child: buildCompanyList()),
+            Expanded(child: isLoading ? Center(child: CircularProgressIndicator()) : buildCompanyList()),
           ],
         ),
       ),
@@ -81,7 +108,7 @@ class _LocalServicesState extends State<LocalServices> with SingleTickerProvider
         onTap: () {
           setState(() {
             selectedService = service;
-           updateCompanies();
+            updateCompanies();
           });
         },
         child: Container(
@@ -105,87 +132,83 @@ class _LocalServicesState extends State<LocalServices> with SingleTickerProvider
   }
 
   Widget buildLocationField() {
-    return TextField(
-      controller: locationController,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        hintText: 'Enter Your Location',
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
+  return TextField(
+    controller: locationController,
+    style: TextStyle(color: Colors.white),
+    onSubmitted: (_) => updateCompanies(), // Trigger search on Enter
+    decoration: InputDecoration(
+      hintText: 'Enter Your Location',
+      hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+      filled: true,
+      fillColor: Colors.white.withOpacity(0.1),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide.none,
       ),
-    );
-  }
-
-  Widget buildCompanyList() {
-    return  ListView.builder(
-        itemCount: companies.length,
-        itemBuilder: (context, index) {
-          final company = companies[index];
-          return Card(
-            color: Colors.white.withOpacity(0.05),
-            margin: EdgeInsets.symmetric(vertical: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: ListTile(
-              title: Text(
-                company["name"],
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Row(
-                children: List.generate(5, (starIndex) {
-                  return Icon(
-                    Icons.star,
-                    color: starIndex < company["rating"] ? Colors.yellow : Colors.grey,
-                    size: 20,
-                  );
-                }),
-              ),
-              trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                ),
-                onPressed: () {
-                  // Handle booking action
-                   Navigator.push(
-                         context,
-                         MaterialPageRoute(
-                        builder: (context) => Servicebooking(
-                          companyName: company["name"],
-                        ),
+      suffixIcon: IconButton(
+        icon: Icon(Icons.search, color: Colors.white),
+        onPressed: updateCompanies, // Trigger search on button press
+      ),
     ),
   );
-                },
-                child: Text('Book'),
-              ),
-            ),
-          );
-        },
-      );
-    
-  }
+}
 
-  void updateCompanies() {
-    if (selectedService == "Plumber") {
-      companies = [
-        {"name": "FixIt Plumbers", "rating": 4},
-        {"name": "PlumbQuick", "rating": 4},
-      ];
-    } else if (selectedService == "Electrician") {
-      companies = [
-        {"name": "ElectroFix Solutions", "rating": 5},
-        {"name": "Bright Sparks Ltd", "rating": 4},
-      ];
-    } else if (selectedService == "Cleaner") {
-      companies = [
-        {"name": "SparkleClean Services", "rating": 5},
-        {"name": "FreshStart Cleaning", "rating": 4},
-      ];
-    }
+
+  Widget buildCompanyList() {
+    return ListView.builder(
+      itemCount: companies.length,
+      itemBuilder: (context, index) {
+        final company = companies[index];
+        return Card(
+          color: Colors.white.withOpacity(0.05),
+          margin: EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: ListTile(
+            title: Text(
+              company.id,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Row(
+              children: [
+                Row(
+                  children: List.generate(5, (starIndex) {
+                    return Icon(
+                      Icons.star,
+                      color: starIndex < company.rating ? Colors.yellow : Colors.grey,
+                      size: 20,
+                    );
+                  }),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  '\$${company.cost}',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+            trailing: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Servicebooking(
+                      companyName: company.id,
+                     availableTimes: company.time.map((time) => time.toString()).toList(),
+                      rate: company.cost,
+                    ),
+                  ),
+                );
+              },
+              child: Text('Book'),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -1,22 +1,53 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../payments/payment.dart';
 
 
 
 class BusBookingPage extends StatefulWidget {
+  final String busId;
+
+  const BusBookingPage({Key? key, required this.busId}) : super(key: key);
   @override
   _BusBookingPageState createState() => _BusBookingPageState();
 }
 
 class _BusBookingPageState extends State<BusBookingPage> {
-  int _ticketCount = 1;
-  final double _singleTicketCost = 30.0; // Cost of a single bus ticket in dollars
-
+   int _ticketCount = 1;
+  double _singleTicketCost = 0.0;
+  String title = "";
+  double totalticket=0;
+  String from="";
+  String to="";
+  List<dynamic> facilities = [];
+@override
+  void initState() {
+    super.initState();
+    _fetchBusDetails();
+  }
+Future<void> _fetchBusDetails() async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('bus').doc(widget.busId).get();
+    if (doc.exists) {
+      setState(() {
+        title = doc['title'] ?? '';
+        from=doc['FROM'] ?? '';
+        to=doc['TO'] ?? '';
+        totalticket=(doc['tickets'] as num?)?.toDouble() ?? 0.0;
+        print(totalticket);
+        _singleTicketCost = (doc['ticketcost'] as num?)?.toDouble() ?? 0.0;
+        facilities = doc['facilities'] ?? [];
+      });
+    }
+  }
   void _incrementTickets() {
-    setState(() {
-      _ticketCount++;
-    });
+   if (_ticketCount <totalticket) {
+      setState(() {
+        _ticketCount++;
+      });
+    }
+    
+    
   }
 
   void _decrementTickets() {
@@ -139,26 +170,37 @@ class _BusBookingPageState extends State<BusBookingPage> {
               ),
               SizedBox(height: 20),
               // Facilities Section
-              Text(
-                "Facilities",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+              Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment
+                          .spaceEvenly,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      "$from->$to",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24
+                      ),
+                    ),
+                  ],
+                ),
+              
               SizedBox(height: 10),
-              FacilityCard(
-                icon: Icons.wifi,
-                title: "Free Wi-Fi",
-                description: "Stay connected with high-speed internet on board.",
-              ),
-              FacilityCard(
-                icon: Icons.ac_unit,
-                title: "Air Conditioning",
-                description: "Travel comfortably with a cool and refreshing environment.",
-              ),
-              FacilityCard(
-                icon: Icons.event_seat,
-                title: "Reclining Seats",
-                description: "Relax with adjustable seats for a comfortable journey.",
-              ),
+              Text("Facilities", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              ...facilities.map((f) => FacilityCard(
+                    icon: Icons.check_circle_outline,
+                    title: f,
+                    description: '',
+                  )),
               SizedBox(height: 20),
               // Ticket Quantity Selector
               Text(
@@ -167,20 +209,11 @@ class _BusBookingPageState extends State<BusBookingPage> {
               ),
               SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: _decrementTickets,
-                  ),
-                  Text(
-                    "$_ticketCount",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: _incrementTickets,
-                  ),
+                  IconButton(icon: Icon(Icons.remove), onPressed: _decrementTickets),
+                  Text("$_ticketCount", style: TextStyle(fontSize: 20)),
+                  IconButton(icon: Icon(Icons.add), onPressed: _incrementTickets),
                 ],
               ),
               SizedBox(height: 20),
@@ -193,28 +226,18 @@ class _BusBookingPageState extends State<BusBookingPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Cost per Ticket:",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Text(
-                    "\$${_singleTicketCost.toStringAsFixed(2)}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text("Cost per Ticket:", style: TextStyle(fontSize: 18)),
+                  Text("${_singleTicketCost.toStringAsFixed(2)}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
               SizedBox(height: 5),
-              Row(
+               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Total Cost:",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Text(
-                    "\$${totalCost.toStringAsFixed(2)}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  Text("Total Cost:", style: TextStyle(fontSize: 18)),
+                  Text("${totalCost.toStringAsFixed(2)}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
               SizedBox(height: 20),
@@ -253,7 +276,7 @@ class FacilityCard extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Row(
           children: [
-            Icon(icon, size: 30, color: Colors.green),
+            Icon(_getIconFromName(title), size: 30, color: Colors.green),
             SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -277,3 +300,18 @@ class FacilityCard extends StatelessWidget {
     );
   }
 }
+ IconData _getIconFromName(String iconName) {
+    print(iconName);
+    switch (iconName.toLowerCase()) {
+      case 'wifi':
+        //print("wifi");
+        return Icons.wifi;
+      case 'reclining seats':
+        return Icons.event_seat;
+      case 'air conditioning':
+        //print("air");
+        return Icons.ac_unit_sharp;
+      default:
+        return Icons.info;
+    }
+  }
