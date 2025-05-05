@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       
       
-      home: home(),
+      home: login(),
        locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       //theme: ThemeData.light(),
