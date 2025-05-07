@@ -6,19 +6,31 @@ import 'package:flutter/material.dart';
 class localcar extends StatelessWidget {
   final String id;
   final List<dynamic> services;
-  final List<dynamic> time;
+ // final rating
+ final List<dynamic> time;
   final int cost;
   final int rating;
+  //String serv;
 
   const localcar({
     super.key,
     required this.id,
     required this.services,
-    required this.time,
+    //required this.rating,
     required this.cost,
-    required this.rating,
+    required this.rating, required this.time
   });
 
+  AssetImage _getEventImage(String eventType) {
+    switch (eventType.toLowerCase()) {
+      case 'sports':
+        return AssetImage('assets/sports.jpeg');
+      case 'concert':
+        return AssetImage('assets/concert.jpeg');
+      default:
+        return AssetImage('assets/events.jpg');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -28,82 +40,101 @@ class localcar extends StatelessWidget {
               companyName: id, // Using the id as company name
               availableTimes: time.map((t) => t.toString()).toList(),
               rate: cost,
+              serv: services.last,
             ),
 
         )
         );
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 2.0,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset("images/img1.jpg", fit: BoxFit.cover);
-                },
+      child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+         Container(
+            height: 140,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: _getEventImage(services.first), 
+                fit: BoxFit.fill,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  blurStyle: BlurStyle.normal,
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 130,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black.withOpacity(0.5), Colors.transparent],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
             ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.5),
-                      const Color.fromRGBO(255, 234, 0, 1),
-                    ],
-                    end: Alignment.topLeft,
-                    begin: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      services.isNotEmpty ? services.last : 'Service',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Cost: \$${cost.toString()}",
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          time.isNotEmpty ? time.first : "Time",
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+          ),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Text(
+              "$cost\$",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
               ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 16,
+            child: Text(
+             services.isNotEmpty ? services.last : 'Service',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom:50,
+            left: 16,
+            child: Text(
+             id,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          
+           Positioned(
+            bottom: 12,
+            left: 16,
+            child:Row(
+              children: [
+                Row(
+                  children: List.generate(5, (starIndex) {
+                    return Icon(
+                      Icons.star,
+                      color: starIndex < rating ? Colors.yellow : Colors.grey,
+                      size: 20,
+                    );
+                  }),
+                ),]
+            ),
+          ),
+        ],
       ),
+    )
     );
   }
 }
@@ -134,11 +165,12 @@ class localhoizontal extends StatelessWidget {
           return Center(child: Text('No service found'));
         }
 
-        return Container(
+        return SizedBox(
           height: 130,
           child: ListView.builder(
             itemCount: servi.length,
             scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
             itemBuilder: (context, index) {
               final serv = servi[index];
               return Container(
@@ -147,9 +179,10 @@ class localhoizontal extends StatelessWidget {
                 child: localcar(
                   id: serv.id,
                   services: serv.services,
-                  time: serv.time,
+                  //time: serv.time,
                   cost: serv.cost,
-                  rating: serv.rating,
+                  
+                  rating: serv.rating, time: serv.time,
                   
                 ),
               );

@@ -38,6 +38,9 @@ class _SignupState extends State<Signup> {
           'name': _nameController.text.trim(),
           'email': _emailController.text.trim(),
           'createdAt': FieldValue.serverTimestamp(),
+          'dob': " ",
+          'gender': " ",
+          'location': " ",
         });
         if (mounted) {
           ScaffoldMessenger.of(

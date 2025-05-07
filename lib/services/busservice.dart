@@ -35,7 +35,7 @@ class Busmodel {
       from: data['FROM'] ?? '',
       to: data['TO'] ?? '',
       duration: data['duration'] ?? '',
-      date: data['date'] ?? '',
+      date: data['date']??'',
       facilities: data['facilities'] ?? [],
       ticketcost: data['ticketcost'] ?? 0,
       tickets: data['tickets'] ?? 0,
@@ -50,7 +50,8 @@ class BusService {
       FirebaseFirestore.instance.collection('bus');
 
   Future<List<Busmodel>> fetchBuses() async {
-    final snapshot = await _busCollection.get();
+    final snapshot = await _busCollection.orderBy('timestamp').get();
+    //print(snapshot);
 
     return snapshot.docs.map((doc) {
       return Busmodel.fromMap(doc.data() as Map<String, dynamic>, doc.id);

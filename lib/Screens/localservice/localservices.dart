@@ -200,6 +200,7 @@ class _LocalServicesState extends State<LocalServices> with SingleTickerProvider
                       companyName: company.id,
                      availableTimes: company.time.map((time) => time.toString()).toList(),
                       rate: company.cost,
+                      serv:selectedService,
                     ),
                   ),
                 );

@@ -8,7 +8,8 @@ class Bushomepagecard extends StatefulWidget {
   final String date;
   final String time;
   final String id;
-  const Bushomepagecard({super.key, required this.from, required this.to, required this.date, required this.time, required this.id});
+  final int cost;
+  const Bushomepagecard({super.key, required this.from, required this.to, required this.date, required this.time, required this.id, required this.cost});
 
   @override
   State<Bushomepagecard> createState() => _BushomepagecardState();
@@ -18,99 +19,93 @@ class _BushomepagecardState extends State<Bushomepagecard> {
   @override
   Widget build(BuildContext context) {
       return InkWell(
-      onTap: () {
+       onTap: () {
         Navigator.push(context,
         MaterialPageRoute(builder: (context)=>BusBookingPage(busId:widget.id)),
         );
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 2.0,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                fit: BoxFit.cover,
-                errorBuilder: (
-                  context,
-                  error,
-                  stackTrace,
-                ) {
-                  return Image.asset(
-                    "images/img1.jpg",
-                    fit: BoxFit.cover,
-                  );
-                },
+      child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+         Container(
+            height: 140,
+            margin: const EdgeInsets.symmetric(horizontal: 6),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/bus2.png"),
+                fit: BoxFit.fill,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  blurStyle: BlurStyle.normal,
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 130,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black.withOpacity(0.5), Colors.transparent],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
             ),
+          ),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Text(
+              "${widget.cost}\$",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 16,
+            child: Text(
+             "${widget.from}->${widget.to}",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          if (widget.date.isNotEmpty)
             Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(
-                  15,
-                  10,
-                  10,
-                  10,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.5),
-                      Color.fromRGBO(255, 234, 0, 1),
-                    ],
-                    end: Alignment.topLeft,
-                    begin: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    5,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                    "${widget.from}->${widget.to}",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
-                      children: [
-                        Text(
-                          widget.date,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          widget.time,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              bottom: 12,
+              left: 16,
+              child: Text(
+                widget.date,
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ],
-        ),
+           Positioned(
+            bottom: 12,
+            right: 16,
+            child: Text(
+              widget.time,
+              style: TextStyle(
+               // fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
+    )
     );
   }
 }
@@ -132,6 +127,7 @@ class BusHorizontalList extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
+          print(snapshot.error);
           return Center(child: Text('Error loading buses'));
         }
 
@@ -146,17 +142,19 @@ class BusHorizontalList extends StatelessWidget {
           child: ListView.builder(
             itemCount: buses.length,
             scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
             itemBuilder: (context, index) {
               final bus = buses[index];
               return Container(
                 width: 220,
-                //margin: EdgeInsets.only(right: 12),
+                margin: EdgeInsets.only(right: 8),
                 child: Bushomepagecard(
                   id:bus.id,
                   from: bus.from,
                   to: bus.to,
                   date: bus.date,
                   time: bus.time,
+                  cost:bus.ticketcost
                 ),
               );
             },

@@ -2,11 +2,14 @@ import 'package:bookify/Screens/bus/bus.dart';
 import 'package:bookify/Screens/bus/bushomepagecard.dart';
 import 'package:bookify/Screens/events/eventhomepagecar.dart';
 import 'package:bookify/Screens/events/events.dart';
+import 'package:bookify/Screens/flights/flighthomepage.dart';
 import 'package:bookify/Screens/flights/flights.dart';
 import 'package:bookify/Screens/localservice/localservices.dart';
 import 'package:bookify/Screens/localservice/locservcar.dart';
 import 'package:bookify/services/flights.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'bus/bussearch.dart';
@@ -29,31 +32,42 @@ class _HomepageState extends State<Homepage> {
   bool _isTapped3 = false;
   bool _isTapped4 = false;
   bool _isTapped5 = false;
-  late List<Flight> _flights;
-  bool _isLoading = false;
-  Future<void> flightsdata() async {
-    setState(() {
-      _isLoading = true;
-    });
-    _flights = await Fectchdata.fetchFlightData();
-    print(_flights[0].servicesOffered.toString());
-    setState(() {
-      _isLoading = false;
-    });
-  }
+  
+  String name ='';
+   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
 
   @override
   void initState() {
-    // TODO: implement initState
+    //
     super.initState();
     print("fligt data");
-    flightsdata();
+    
+    _initializename();
+  }
+  Future<void> _initializename() async {
+    final currentUser = _auth.currentUser;
+    name = currentUser?.displayName ?? "" ;
+    if (currentUser != null) {
+      // Fetch user data from Firestore
+      //print("enter if");
+      final docSnapshot = await _firestore.collection('users').doc(currentUser.uid).get();
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        
+        name= data?['name'] ?? "user";
+        //print(name);
+      }
+    }
+  
+    setState(() {}); // Update UI after fetching data
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+    backgroundColor: Colors.grey,
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -65,10 +79,11 @@ class _HomepageState extends State<Homepage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        "Hello Name 😀\nHow are you Today",
+                        
+                        "Hello $name 😀\nHow are you Today",
                         style: TextStyle(color: white),
                       ),
                     ),
@@ -344,273 +359,240 @@ class _HomepageState extends State<Homepage> {
               ),
               const SizedBox(height: 20),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Flights",
-                          style: TextStyle(color: Colors.white, fontSize: 17),
-                        ),
-                        GestureDetector(
-                          onTapDown: (_) {
-                            setState(() {
-                              _isTapped5 = true;
-                            });
-                          },
-                          onTapUp: (_) {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Flightsearch(),
-                              ),
-                            );
-                          },
-                          onTapCancel: () {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                          },
-                          child: Text(
-                            "Show more",
-                            style: TextStyle(
-                              color:
-                                  _isTapped5
-                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
-                                      : const Color.fromRGBO(255, 255, 255, 1),
-                              fontSize: 17,
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Flights",
+                            style: TextStyle(color: Colors.white, fontSize: 17),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.27,
-
-                      child: _isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : _flights.isEmpty
-                          ? const Center(child: Text('No flights available'))
-                          : ListView.builder(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _flights.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final flight = _flights[index];
-                              return SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.27,
-                                width: MediaQuery.of(context).size.width * 0.9,// Dynamic height
-                                child: FlightCard(
-                                  flight: flight,
-                                  onBookNow: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>FlightBookingPage(flight: flight,)));
-                                    // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen(flight: flight)));
-                                  },
+                          GestureDetector(
+                            onTapDown: (_) {
+                              setState(() {
+                                _isTapped5 = true;
+                              });
+                            },
+                            onTapUp: (_) {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Flightsui(),
                                 ),
                               );
                             },
+                            onTapCancel: () {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                            },
+                            child: Text(
+                              "Show more",
+                              style: TextStyle(
+                                color: _isTapped5
+                                    ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                    : const Color.fromRGBO(255, 255, 255, 1),
+                                fontSize: 17,
+                              ),
+                            ),
                           ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: FlightHorizontalList(),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+
+              //const SizedBox(height: 10),
 
               //////////////////////////////////////////////////////////////////////////////////////////////////////////
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Buses",
-                          style: TextStyle(color: Colors.white, fontSize: 17),
-                        ),
-                        GestureDetector(
-                          onTapDown: (_) {
-                            setState(() {
-                              _isTapped5 = true;
-                            });
-                          },
-                          onTapUp: (_) {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Bus(),
+                    Padding(
+                      padding:  const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Bus",
+                            style: TextStyle(color: Colors.white, fontSize: 17),
+                          ),
+                          GestureDetector(
+                            onTapDown: (_) {
+                              setState(() {
+                                _isTapped5 = true;
+                              });
+                            },
+                            onTapUp: (_) {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Bus(),
+                                ),
+                              );
+                            },
+                            onTapCancel: () {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                            },
+                            child: Text(
+                              "Show more",
+                              style: TextStyle(
+                                color: _isTapped5
+                                    ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                    : const Color.fromRGBO(255, 255, 255, 1),
+                                fontSize: 17,
                               ),
-                            );
-                            print("Show more tapped!");
-                          },
-                          onTapCancel: () {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                          },
-                          child: Text(
-                            "Show more",
-                            style: TextStyle(
-                              color:
-                                  _isTapped5
-                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
-                                      : const Color.fromRGBO(255, 255, 255, 1),
-                              fontSize: 17,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                   // const SizedBox(height: 10),
                     Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       
-                        BusHorizontalList(),
-                      ],
-                    ),),
-                    //const SizedBox(height: 10),
+                      padding: const EdgeInsets.all(16),
+                      child: BusHorizontalList(),
+                    ),
                   ],
                 ),
               ),
+
              // const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////////////////////////////////////////////////
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Events",
-                          style: TextStyle(color: Colors.white, fontSize: 17),
-                        ),
-                        GestureDetector(
-                          onTapDown: (_) {
-                            setState(() {
-                              _isTapped5 = true;
-                            });
-                          },
-                          onTapUp: (_) {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Events(),
-                              ),);
-                            print("Show more tapped!");
-                          },
-                          onTapCancel: () {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                          },
-                          child: Text(
-                            "Show more",
-                            style: TextStyle(
-                              color:
-                                  _isTapped5
-                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
-                                      : const Color.fromRGBO(255, 255, 255, 1),
-                              fontSize: 17,
+                    Padding(
+                      padding:  const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Events",
+                            style: TextStyle(color: Colors.white, fontSize: 17),
+                          ),
+                          GestureDetector(
+                            onTapDown: (_) {
+                              setState(() {
+                                _isTapped5 = true;
+                              });
+                            },
+                            onTapUp: (_) {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Events(),
+                                ),
+                              );
+                            },
+                            onTapCancel: () {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                            },
+                            child: Text(
+                              "Show more",
+                              style: TextStyle(
+                                color: _isTapped5
+                                    ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                    : const Color.fromRGBO(255, 255, 255, 1),
+                                fontSize: 17,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    //const SizedBox(height: 10),
-                     Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       
-                        eventhorizontal(),
-                      ],
-                    ),),
-                    //const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child:  eventhorizontal(),
+                    ),
                   ],
                 ),
               ),
+
               //const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////////////////////////////////////////////////
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+             Container(
+              margin: const EdgeInsets.symmetric(horizontal: 5),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Services",
-                          style: TextStyle(color: Colors.white, fontSize: 17),
-                        ),
-                        GestureDetector(
-                          onTapDown: (_) {
-                            setState(() {
-                              _isTapped5 = true;
-                            });
-                          },
-                          onTapUp: (_) {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LocalServices(),
+                    Padding(
+                      padding:  const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "local sevices",
+                            style: TextStyle(color: Colors.white, fontSize: 17),
+                          ),
+                          GestureDetector(
+                            onTapDown: (_) {
+                              setState(() {
+                                _isTapped5 = true;
+                              });
+                            },
+                            onTapUp: (_) {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LocalServices(),
+                                ),
+                              );
+                            },
+                            onTapCancel: () {
+                              setState(() {
+                                _isTapped5 = false;
+                              });
+                            },
+                            child: Text(
+                              "Show more",
+                              style: TextStyle(
+                                color: _isTapped5
+                                    ? const Color.fromRGBO(255, 193, 7, 0.8)
+                                    : const Color.fromRGBO(255, 255, 255, 1),
+                                fontSize: 17,
                               ),
-                            );
-                            print("Show more tapped!");
-                          },
-                          onTapCancel: () {
-                            setState(() {
-                              _isTapped5 = false;
-                            });
-                          },
-                          child: Text(
-                            "Show more",
-                            style: TextStyle(
-                              color:
-                                  _isTapped5
-                                      ? const Color.fromRGBO(255, 193, 7, 0.8)
-                                      : const Color.fromRGBO(255, 255, 255, 1),
-                              fontSize: 17,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                     Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       
-                        localhoizontal(),
-                      ],
-                    ),),
-                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: localhoizontal(),
+                    ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 20),
             ],
           ),
