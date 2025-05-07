@@ -94,38 +94,7 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
-              CarouselSlider(
-                items: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        image: const DecorationImage(
-                          image: NetworkImage(
-                            "https://plus.unsplash.com/premium_photo-1742945845688-7c11c2f6d33d?q=80&w=1518&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-                options: CarouselOptions(
-                  height: 180,
-                  aspectRatio: 16 / 9,
-                  viewportFraction: 0.8,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 3),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  enlargeFactor: 0.3,
-                  scrollDirection: Axis.horizontal,
-                ),
-              ),
+              MyCarousel(),
               const SizedBox(height: 20),
               const Padding(
                 padding: EdgeInsets.only(left: 25),
@@ -597,6 +566,51 @@ class _HomepageState extends State<Homepage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+class MyCarousel extends StatelessWidget {
+  final List<String> assetImagePaths = [
+    'assets/plane2.png',
+    'assets/rbus.png',
+    'assets/Dj.png',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselSlider(
+      items: assetImagePaths.map((imagePath) {
+        return GestureDetector(
+          onTap: () {
+            // Handle tap if needed
+          },
+          child: Container(
+            margin: const EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: AssetImage(imagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+      options: CarouselOptions(
+        height: 180,
+        aspectRatio: 16 / 9,
+        viewportFraction: 0.8,
+        enableInfiniteScroll: true,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        autoPlayCurve: Curves.fastOutSlowIn,
+        enlargeCenterPage: true,
+        enlargeFactor: 0.3,
+        scrollDirection: Axis.horizontal,
       ),
     );
   }

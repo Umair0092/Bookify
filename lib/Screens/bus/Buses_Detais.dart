@@ -18,8 +18,10 @@ class _BusBookingPageState extends State<BusBookingPage> {
   int availableSeats = 0;
   String from = "";
   String to = "";
-  DateTime departureTime = DateTime.now();
+  String timeStr="";
+  
   String? duration;
+  DateTime dep=DateTime(2025);
   List<String> facilities = [];
   bool isLoading = true;
 
@@ -44,12 +46,14 @@ class _BusBookingPageState extends State<BusBookingPage> {
           to = data['TO'] as String? ?? '';
           // Parse date and time to create departureTime
           String dateStr = data['date'] as String? ?? '15/5/2025'; // Default to current date if missing
-          String timeStr = data['time'] as String? ?? '8:50AM'; // Default to a time if missing
-          departureTime = _parseDateTime(dateStr, timeStr);
+           timeStr = data['time'] as String? ?? '8:50AM'; // Default to a time if missing
+         // departureTime = _parseDateTime(dateStr, timeStr);
           _singleTicketCost = (data['ticketcost'] as num?)?.toDouble() ?? 0.0;
           availableSeats = (data['tickets'] as num?)?.toInt() ?? 0;
           duration = data['duration'] as String?;
+          dep=(data['timestamp'] as Timestamp).toDate() ;
           facilities = (data['facilities'] as List<dynamic>?)
+          
               ?.map((e) => e.toString())
               .toList() ??
               [];
@@ -106,6 +110,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
       return DateTime.now(); // Fallback to current time if parsing fails
     }
   }
+  
 
   void _incrementTickets() {
     if (_ticketCount < availableSeats) {
@@ -164,12 +169,13 @@ class _BusBookingPageState extends State<BusBookingPage> {
                       busId: widget.busId,
                       departureCity: from,
                       destinationCity: to,
-                      departureTime: departureTime,
+                      departureTime: dep,
                       price: _singleTicketCost,
                       availableSeats: availableSeats,
                       duration: duration,
                       facilities: facilities,
                       numberOfPassengers: _ticketCount,
+                      time: timeStr,
                     ),
                   ),
                 );
@@ -238,16 +244,14 @@ class _BusBookingPageState extends State<BusBookingPage> {
                     ),
                     const CircleAvatar(
                       radius: 80,
-                      backgroundImage: NetworkImage(
-                          'https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                      backgroundImage: AssetImage('assets/rbus.png')
                     ),
                     Positioned(
                       top: 0,
                       left: 0,
                       child: const CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                        backgroundImage:AssetImage('assets/rbussun.png'),
                       ),
                     ),
                     Positioned(
@@ -255,8 +259,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
                       right: 0,
                       child: const CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                        backgroundImage: AssetImage('assets/rbussun.png'),
                       ),
                     ),
                     Positioned(
@@ -264,9 +267,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
                       left: 0,
                       child: const CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                      ),
+                        backgroundImage:AssetImage('assets/rbussun.png'),),
                     ),
                   ],
                 ),
@@ -298,7 +299,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Departure: ${departureTime.toLocal().toString().split(' ')[0]} ${departureTime.toLocal().toString().split(' ')[1].substring(0, 5)}",
+                    "Departure: ${dep.toLocal().toString().split(' ')[0]} ${dep.toLocal().toString().split(' ')[1].substring(0, 5)}",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,

@@ -25,13 +25,14 @@ class Eventssearch extends StatefulWidget {
 class _EventssearchState extends State<Eventssearch> {
    final TextStyle whiteTextStyle = TextStyle(color: Colors.white);
    late Future<List<Eventmodel>> futureevents;
-  
+   
 
    @override
   void initState() {
     super.initState();
     futureevents = EventService().fetchevents();
   }
+  
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -104,7 +105,7 @@ class _EventssearchState extends State<Eventssearch> {
                       {
                         final event=filtered[index];
                         return buildeventcard(artist: event.artist,eventname: event.eventname,eventid: event.id,
-                         place: event.place, time: event.time, imagePath: "assets/flight.jpg", mycontext: context);
+                         place: event.place, time: event.time, imagePath:event.category, mycontext: context);
                       }
                     );
                 },
@@ -123,7 +124,16 @@ class _EventssearchState extends State<Eventssearch> {
   }
 }
 
-
+String _getEventImage(String eventType) {
+    switch (eventType.toLowerCase()) {
+      case 'sports':
+        return 'assets/stadium.png';
+      case 'concert':
+        return 'assets/Dj.png';
+      default:
+        return 'assets/event.jpg';
+    }
+  }
 
 
 
@@ -151,7 +161,7 @@ Widget buildeventcard({
             ClipRRect(
               borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
               child: Image.asset(
-                imagePath,
+                _getEventImage(imagePath),
                 width: 100,
                 height: 120,
                 fit: BoxFit.cover,

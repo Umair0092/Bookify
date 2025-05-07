@@ -1,9 +1,10 @@
 import 'package:bookify/Screens/Colors.dart';
 import 'package:flutter/material.dart';
-import '../../services/tickets.dart'; // Import Ticket class
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../services/tickets.dart'; // Ticket class
 
 class Summary extends StatefulWidget {
-  final Ticket ticket; // Add Ticket parameter
+  final Ticket ticket;
 
   const Summary({super.key, required this.ticket});
 
@@ -34,6 +35,7 @@ class _SummaryState extends State<Summary> {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 'Summary',
@@ -51,8 +53,8 @@ class _SummaryState extends State<Summary> {
               if (ticket.ticketType == TicketType.event || ticket.ticketType == TicketType.bus)
                 _infoRow('Location', secondstr: ticket.locationFrom ?? 'Unknown'),
               _infoRow(
-                ticket.date.toLocal().toString().split(' ')[0], // Date only
-                secondstr: ticket.time, // Time
+                ticket.date.toLocal().toString().split(' ')[0],
+                secondstr: ticket.time,
               ),
               _infoRow(
                 'Tickets',
@@ -65,11 +67,59 @@ class _SummaryState extends State<Summary> {
               if (ticket.ticketType == TicketType.flight && ticket.arrivalTime != null)
                 _infoRow(
                   'Arrival',
-                  secondstr: '${ticket.arrivalTime!.toLocal().toString().split(' ')[0]} ${ticket.arrivalTime!.toLocal().toString().split(' ')[1].substring(0, 5)}',
+                  secondstr:
+                      '${ticket.arrivalTime!.toLocal().toString().split(' ')[0]} ${ticket.arrivalTime!.toLocal().toString().split(' ')[1].substring(0, 5)}',
                 ),
-              if (ticket.ticketType == TicketType.event && ticket.highlights != null && ticket.highlights!.isNotEmpty)
+              if (ticket.ticketType == TicketType.event &&
+                  ticket.highlights != null &&
+                  ticket.highlights!.isNotEmpty)
                 _infoRow('Highlights', secondstr: ticket.highlights!.join(', ')),
               _infoRow('Cost', secondstr: '\$${ticket.cost.toStringAsFixed(2)}', bold: true),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Delete Booking'),
+                        content: const Text('Are you sure you want to delete this booking?'),
+                        actions: [
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () => Navigator.pop(ctx, false),
+                          ),
+                          TextButton(
+                            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                            onPressed: () => Navigator.pop(ctx, true),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true) {
+                      try {
+                        await deleteTicket( userId: ticket.userId, ticketId: ticket.id, ticketType: ticket.ticketType);
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Booking deleted successfully')),
+                        );
+                        Navigator.pop(context, true);// Go back after deletion
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error deleting booking: $e')),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Delete Booking', style: TextStyle(color: Colors.white)),
+                ),
+              ),
             ],
           ),
         ),
@@ -92,7 +142,7 @@ class _SummaryState extends State<Summary> {
           ),
           if (secondstr != null)
             Text(
-              secondstr.length>20?secondstr.substring(0,20)+"...":secondstr,
+              secondstr.length > 20 ? secondstr.substring(0, 20) + "..." : secondstr,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,

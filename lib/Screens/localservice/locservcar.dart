@@ -21,14 +21,16 @@ class localcar extends StatelessWidget {
     required this.rating, required this.time
   });
 
-  AssetImage _getEventImage(String eventType) {
+  AssetImage _getImage(String eventType) {
+    print(eventType.toLowerCase());
     switch (eventType.toLowerCase()) {
-      case 'sports':
-        return AssetImage('assets/sports.jpeg');
-      case 'concert':
-        return AssetImage('assets/concert.jpeg');
+      
+      case 'plumber':
+        return AssetImage('assets/plumber.png');
+      case 'electrician':
+        return AssetImage('assets/electrician.png');
       default:
-        return AssetImage('assets/events.jpg');
+        return AssetImage('assets/cleaner.png');
     }
   }
   @override
@@ -54,8 +56,10 @@ class localcar extends StatelessWidget {
             height: 140,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: _getEventImage(services.first), 
+                image: _getImage(services.last), 
                 fit: BoxFit.fill,
+                
+                
               ),
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: [
@@ -85,7 +89,7 @@ class localcar extends StatelessWidget {
             child: Text(
               "$cost\$",
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
               ),

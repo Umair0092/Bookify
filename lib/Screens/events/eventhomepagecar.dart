@@ -19,9 +19,9 @@ class _EventcardState extends State<Eventcard> {
   AssetImage _getEventImage(String eventType) {
     switch (eventType.toLowerCase()) {
       case 'sports':
-        return AssetImage('assets/sports.jpeg');
+        return AssetImage('assets/stadium.png');
       case 'concert':
-        return AssetImage('assets/concert.jpeg');
+        return AssetImage('assets/Dj.png');
       default:
         return AssetImage('assets/events.jpg');
     }

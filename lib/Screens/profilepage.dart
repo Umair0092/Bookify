@@ -54,7 +54,7 @@ class _ProfilepageState extends State<Profilepage> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    _dobController.dispose();
+    //_dobController.dispose();
     _locationController.dispose();
     super.dispose();
   }
@@ -181,7 +181,8 @@ class _ProfilepageState extends State<Profilepage> {
                 children: [
                   const CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/flight.jpg'),
+                    //backgroundImage: AssetImage('assets/flight.jpg'),
+                    child: Icon(Icons.person_outline_rounded),
                   ),
                   Positioned(
                     bottom: 0,
@@ -189,7 +190,12 @@ class _ProfilepageState extends State<Profilepage> {
                     child: CircleAvatar(
                       backgroundColor: Colors.blue,
                       radius: 16,
-                      child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                      child: Text(
+                            _nameController.text.isNotEmpty 
+                              ? _nameController.text[0].toUpperCase() 
+                              : '?',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
                     ),
                   ),
                 ],

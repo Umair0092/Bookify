@@ -101,7 +101,100 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
         ),
       );
     }
-  }
+  }// Updated buildcard to accept dynamic title and subtitle
+Widget buildcard({
+  required String title,
+  required String subtitle,
+  required String time,
+  required String imagePath,
+  required BuildContext mycontext,
+  required Ticket ticket,
+}) {
+  return Card(
+    color: Colors.grey[900],
+    margin: const EdgeInsets.only(bottom: 16.0),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    child: Row(
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+          child: Image.network(
+            imagePath,
+            width: 120,
+            height: 120,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: 120,
+              height: 120,
+              color: Colors.grey,
+              child: Image.asset(
+               "assets/bus.jpg"
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (subtitle.isNotEmpty)
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                Text(
+                  time,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                if (ticket.ticketType == TicketType.bus && ticket.duration != null)
+                  Text(
+                    'Duration: ${ticket.duration}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.black,
+            ),
+            onPressed: () async {
+              final result =await Navigator.push(
+                mycontext,
+                MaterialPageRoute(
+                  builder: (mycontext) => Summary(ticket: ticket),
+                ),
+              );
+              if (result == true) {
+                _fetchTickets(); // or reload state
+              }
+              
+            },
+            child: const Text('Select'),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -266,8 +359,13 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
       return ticket.airline ?? 'Unknown Airline';
     } else if (ticket.ticketType == TicketType.event) {
       return ticket.artist ?? 'Unknown Event';
-    } else {
-      return 'Service';
+      
+    } else if (ticket.ticketType == TicketType.service) {
+      return ticket.title ?? 'Unknown Event';
+    }
+    else
+    {
+      return 'service';
     }
   }
 
@@ -285,93 +383,3 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
   }
 }
 
-// Updated buildcard to accept dynamic title and subtitle
-Widget buildcard({
-  required String title,
-  required String subtitle,
-  required String time,
-  required String imagePath,
-  required BuildContext mycontext,
-  required Ticket ticket,
-}) {
-  return Card(
-    color: Colors.grey[900],
-    margin: const EdgeInsets.only(bottom: 16.0),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    child: Row(
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
-          child: Image.network(
-            imagePath,
-            width: 120,
-            height: 120,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              width: 120,
-              height: 120,
-              color: Colors.grey,
-              child: Image.asset(
-               "assets/bus.jpg"
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (subtitle.isNotEmpty)
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                const SizedBox(height: 8),
-                Text(
-                  time,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                if (ticket.ticketType == TicketType.bus && ticket.duration != null)
-                  Text(
-                    'Duration: ${ticket.duration}',
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
-                  ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 12.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.amber,
-              foregroundColor: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(
-                mycontext,
-                MaterialPageRoute(
-                  builder: (mycontext) => Summary(ticket: ticket),
-                ),
-              );
-            },
-            child: const Text('Select'),
-          ),
-        ),
-      ],
-    ),
-  );
-}

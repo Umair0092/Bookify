@@ -72,6 +72,16 @@ class _EventBookingPageState extends State<EventBookingPage> {
       });
     }
   }
+  ImageProvider _getEventImage(String eventType) {
+  switch (eventType.toLowerCase()) {
+    case 'sports':
+      return const AssetImage('assets/stadium.png');
+    case 'concert':
+      return const AssetImage('assets/Dj.png');
+    default:
+      return const AssetImage('assets/event.jpg');
+  }
+}
 
   void _showConfirmationDialog() {
     showDialog(
@@ -211,37 +221,33 @@ class _EventBookingPageState extends State<EventBookingPage> {
                             width: 2),
                       ),
                     ),
-                    const CircleAvatar(
-                      radius: 80,
-                      backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                    ),
-                    const Positioned(
+                                    CircleAvatar(
+                    radius: 80,
+                    backgroundImage: _getEventImage(event!.category), // returns ImageProvider
+                  ),
+                     Positioned(
                       top: 0,
                       left: 0,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                      ),
+                      child:  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: _getEventImage(event!.category), // returns ImageProvider
+                  ),
                     ),
-                    const Positioned(
+                     Positioned(
                       top: 0,
                       right: 0,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                      ),
+                      child:  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: _getEventImage(event!.category), // returns ImageProvider
+                  ),
                     ),
-                    const Positioned(
+                     Positioned(
                       bottom: 0,
                       left: 0,
                       child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://images.unsplash.com/photo-1522158637959-30385a09e0da?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                      ),
+                    radius: 30,
+                    backgroundImage: _getEventImage(event!.category), // returns ImageProvider
+                  ),
                     ),
                   ],
                 ),

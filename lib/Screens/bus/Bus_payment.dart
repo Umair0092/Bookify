@@ -11,6 +11,7 @@ class PaymentPage extends StatefulWidget {
   final DateTime departureTime;
   final double price;
   final int availableSeats;
+  final String time;
   final String? duration;
   final List<String>? facilities;
   final int numberOfPassengers;
@@ -25,7 +26,7 @@ class PaymentPage extends StatefulWidget {
     required this.availableSeats,
     this.duration,
     this.facilities,
-    required this.numberOfPassengers,
+    required this.numberOfPassengers, required this.time,
   });
 
   @override
@@ -61,7 +62,7 @@ class _PaymentPageState extends State<PaymentPage> {
         userId: user.uid,
         ticketType: TicketType.bus,
         cost: widget.price * widget.numberOfPassengers,
-        time: widget.departureTime.toLocal().toString().split(' ')[1].substring(0, 5),
+        time: widget.time,
         date: widget.departureTime,
         locationFrom: widget.departureCity,
         locationTo: widget.destinationCity,
@@ -217,7 +218,8 @@ class _PaymentPageState extends State<PaymentPage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: _isProcessing ? null : _bookTicket,
+                   onPressed: _isProcessing ? null : () => _showCardDialog(),
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: searchbutton,
                       shape: RoundedRectangleBorder(
@@ -291,4 +293,89 @@ class _PaymentPageState extends State<PaymentPage> {
       selectedTileColor: Colors.grey[850],
     );
   }
+  void _showCardDialog() {
+  final _formKey = GlobalKey<FormState>();
+  String cardNumber = '';
+  String expiryDate = '';
+  String cvv = '';
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFF1E1E1E),
+        title: const Text(
+          'Enter Card Details',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Card Number',
+                  labelStyle: TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => cardNumber = value,
+                validator: (value) => value == null || value.length < 16
+                    ? 'Enter valid card number'
+                    : null,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Expiry Date (MM/YY)',
+                  labelStyle: TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => expiryDate = value,
+                validator: (value) =>
+                    value == null || !RegExp(r'^\d{2}/\d{2}$').hasMatch(value)
+                        ? 'Enter valid expiry date'
+                        : null,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'CVV',
+                  labelStyle: TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                obscureText: true,
+                onChanged: (value) => cvv = value,
+                validator: (value) => value == null || value.length != 3
+                    ? 'Enter valid CVV'
+                    : null,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: searchbutton),
+            child: const Text('Confirm Payment'),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.of(context).pop();
+                _bookTicket(); // Proceed to booking
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 }
