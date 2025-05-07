@@ -7,7 +7,7 @@ import '../payments/payment.dart';
 class BusBookingPage extends StatefulWidget {
   final String busId;
 
-  const BusBookingPage({Key? key, required this.busId}) : super(key: key);
+  const BusBookingPage({super.key, required this.busId});
   @override
   _BusBookingPageState createState() => _BusBookingPageState();
 }
@@ -19,6 +19,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
   double totalticket=0;
   String from="";
   String to="";
+  String time="";
   List<dynamic> facilities = [];
 @override
   void initState() {
@@ -34,9 +35,10 @@ Future<void> _fetchBusDetails() async {
         from=doc['FROM'] ?? '';
         to=doc['TO'] ?? '';
         totalticket=(doc['tickets'] as num?)?.toDouble() ?? 0.0;
-        print(totalticket);
+       // print(totalticket);
         _singleTicketCost = (doc['ticketcost'] as num?)?.toDouble() ?? 0.0;
         facilities = doc['facilities'] ?? [];
+        time=doc['time']??'';
       });
     }
   }
@@ -170,29 +172,27 @@ Future<void> _fetchBusDetails() async {
               ),
               SizedBox(height: 20),
               // Facilities Section
-              Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment
-                          .spaceEvenly,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                    ),
-                    Text(
-                      "$from->$to",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24
-                      ),
-                    ),
-                  ],
-                ),
+              Text(
+                "Bus Details",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "Bus operator: $title",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              
+              Text(
+                "From: $from   ($time)",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              Text(
+                "To: $to",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
               
               SizedBox(height: 10),
               Text("Facilities", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -206,6 +206,21 @@ Future<void> _fetchBusDetails() async {
               Text(
                 "Number of Tickets",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5,),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Available Tickets:",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  Text(
+                    "${totalticket - _ticketCount}",
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
               ),
               SizedBox(height: 10),
               Row(

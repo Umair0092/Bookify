@@ -7,13 +7,25 @@ class Eventcard extends StatefulWidget {
   final String time ;
   final String date;
   final String id;
-  const Eventcard({super.key, required this.eventname, required this.time, required this.date, required this.id});
+final String cat;
+  final int price;
+  const Eventcard({super.key, required this.eventname, required this.time, required this.date, required this.id, required this.price, required this.cat});
 
   @override
   State<Eventcard> createState() => _EventcardState();
 }
 
 class _EventcardState extends State<Eventcard> {
+  AssetImage _getEventImage(String eventType) {
+    switch (eventType.toLowerCase()) {
+      case 'sports':
+        return AssetImage('assets/sports.jpeg');
+      case 'concert':
+        return AssetImage('assets/concert.jpeg');
+      default:
+        return AssetImage('assets/events.jpg');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -22,99 +34,93 @@ class _EventcardState extends State<Eventcard> {
         MaterialPageRoute(builder: (context)=>EventBookingPage(eventid: widget.id))
         );
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 2.0,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                "https://plus.unsplash.com/premium_photo-1683120929511-af05758ec1e5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                fit: BoxFit.cover,
-                errorBuilder: (
-                  context,
-                  error,
-                  stackTrace,
-                ) {
-                  return Image.asset(
-                    "images/img1.jpg",
-                    fit: BoxFit.cover,
-                  );
-                },
+      child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+         Container(
+            height: 140,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: _getEventImage(widget.cat), 
+                fit: BoxFit.fill,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  blurStyle: BlurStyle.normal,
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 130,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black.withOpacity(0.5), Colors.transparent],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
             ),
+          ),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Text(
+              "${widget.price}\$",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 16,
+            child: Text(
+              widget.eventname,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          if (widget.date.isNotEmpty)
             Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(
-                  15,
-                  10,
-                  10,
-                  10,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.5),
-                      Color.fromRGBO(255, 234, 0, 1),
-                    ],
-                    end: Alignment.topLeft,
-                    begin: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    5,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.eventname,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
-                      children: [
-                        Text(
-                          widget.date,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          widget.time,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              bottom: 12,
+              left: 16,
+              child: Text(
+                widget.date,
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          ],
-        ),
+           Positioned(
+            bottom: 12,
+            right: 16,
+            child: Text(
+              widget.time,
+              style: TextStyle(
+               // fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
+    )
     );
   }
 }
 
 
+// ignore: camel_case_types
 class eventhorizontal extends StatelessWidget {
   final EventService evetserv = EventService();
 
@@ -140,14 +146,14 @@ class eventhorizontal extends StatelessWidget {
         }
 
         return SizedBox(
-          height: 130, // Enough height for horizontal cards
+          height: 150, // Enough height for horizontal cards
           child: ListView.builder(
             itemCount: event.length,
             //shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final even = event[index];
-              return Container(
+              return SizedBox(
                 width: 220,
                 //margin: EdgeInsets.only(left: 12),
                 child: Eventcard(
@@ -155,6 +161,9 @@ class eventhorizontal extends StatelessWidget {
                   eventname:even.eventname,
                   date: even.date,
                   time: even.time,
+                  price: even.cost,
+                  
+                  cat:even.category,
                 ),
               );
             },

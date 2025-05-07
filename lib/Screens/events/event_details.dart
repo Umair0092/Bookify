@@ -16,7 +16,10 @@ class _EventBookingPageState extends State<EventBookingPage> {
   double _singleTicketCost = 0.0; // Cost of a single event ticket in dollars
   String title = "";
   double totalticket=0;
+  String loctaion="";
   List<dynamic> highlights = [];
+  String date="";
+  String time="";
   @override
   void initState() {
     super.initState();
@@ -32,6 +35,10 @@ class _EventBookingPageState extends State<EventBookingPage> {
         print(totalticket);
         _singleTicketCost = (doc['cost'] as num?)?.toDouble() ?? 0.0;
         highlights = doc['highlights'] ?? [];
+        loctaion=doc['place']??'';
+        time=doc['time']??'';
+         date= doc['date']??'';
+         print(date);
       });
     }
   }
@@ -163,11 +170,19 @@ class _EventBookingPageState extends State<EventBookingPage> {
               ),
               SizedBox(height: 20),
               // Event Highlights Section
-             Center(
-                child: Text(
-                  title,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
+              SizedBox(height: 10),
+              Text(
+                "Event Name: $title",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              
+              Text(
+              "location:  $loctaion",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              Text(
+                "Date: $date ($time)",
+                style: TextStyle(fontSize: 18, color: Colors.white),
               ),
               SizedBox(height: 20),
               // Event Highlights Section
@@ -190,6 +205,22 @@ class _EventBookingPageState extends State<EventBookingPage> {
               Text(
                 "Number of Tickets",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+               //SizedBox(height: 5,),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Available Tickets:",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  Text(
+                    "${totalticket - _ticketCount}",
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
               ),
               SizedBox(height: 10),
               Row(

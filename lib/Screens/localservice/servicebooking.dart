@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 class Servicebooking extends StatefulWidget {
   final String companyName;
-  List<String> availableTimes;
+  final List<String> availableTimes;
   final int rate;
+  final String serv;
 
 
-  Servicebooking({super.key, required this.companyName,required this.availableTimes,required this.rate});
+  const Servicebooking({super.key, required this.companyName,required this.availableTimes,required this.rate, required this.serv});
 
   @override
   _ServicebookingState createState() => _ServicebookingState();
@@ -44,6 +45,11 @@ class _ServicebookingState extends State<Servicebooking> {
               style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
+            Text(
+              'selected service: ${widget.serv}',
+              style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
             Text(
               'Select Available Time:',
               style: TextStyle(color: Colors.white, fontSize: 18),
