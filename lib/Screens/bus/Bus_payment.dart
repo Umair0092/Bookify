@@ -2,19 +2,31 @@ import 'package:bookify/Screens/Colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../../services/flights.dart'; // Import Flight class
 import '../../services/tickets.dart'; // Import Ticket class
 
 class PaymentPage extends StatefulWidget {
-  final Flight flight;
+  final String busId;
+  final String departureCity;
+  final String destinationCity;
+  final DateTime departureTime;
+  final double price;
+  final int availableSeats;
+  final String? duration;
+  final List<String>? facilities;
   final int numberOfPassengers;
 
   const PaymentPage({
-    Key? key,
-    required this.flight,
+    super.key,
+    required this.busId,
+    required this.departureCity,
+    required this.destinationCity,
+    required this.departureTime,
+    required this.price,
+    required this.availableSeats,
+    this.duration,
+    this.facilities,
     required this.numberOfPassengers,
-  }) : super(key: key);
+  });
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -24,50 +36,62 @@ class _PaymentPageState extends State<PaymentPage> {
   String _selectedPayment = 'JazzCash';
   bool _isProcessing = false;
 
-  // Function to book the ticket
   Future<void> _bookTicket() async {
     setState(() {
       _isProcessing = true;
     });
 
     try {
-      // Check if enough seats are available
-      if (widget.flight.availableSeats < widget.numberOfPassengers) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('Please sign in to book a ticket.');
+      }
+
+      if (widget.availableSeats < widget.numberOfPassengers) {
         throw Exception('Not enough seats available for booking.');
       }
 
-      // Create a Ticket object for the flight booking
       final ticket = Ticket(
-        id: FirebaseFirestore.instance.collection('tickets').doc().id, // Generate unique ID
-        userId: FirebaseAuth.instance.currentUser!.uid,
-        ticketType: TicketType.flight,
-        cost: widget.flight.price * widget.numberOfPassengers,
-        time: widget.flight.departureTime.toLocal().toString().split(' ')[1].substring(0, 5),
-        date: widget.flight.departureTime,
-        locationFrom: widget.flight.departureCity,
-        locationTo: widget.flight.destinationCity,
-        availableTickets: widget.numberOfPassengers, // Number of tickets booked
-        flightNumber: widget.flight.flightNumber,
-        airline: widget.flight.airline,
-        arrivalTime: widget.flight.arrivalTime,
-        servicesOffered: widget.flight.servicesOffered.map((service) => service.toJson()).toList(),
-        images: [widget.flight.image, widget.flight.image2, widget.flight.image3],
-        isActive: true,
-        createdAt: DateTime.now(),
+        id: FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('tickets')
+            .doc()
+            .id,
+        userId: user.uid,
+        ticketType: TicketType.bus,
+        cost: widget.price * widget.numberOfPassengers,
+        time: widget.departureTime.toLocal().toString().split(' ')[1].substring(0, 5),
+        date: widget.departureTime,
+        locationFrom: widget.departureCity,
+        locationTo: widget.destinationCity,
+        availableTickets: widget.numberOfPassengers,
+        title: widget.duration ?? 'Unknown Duration',
+        duration: widget.duration,
+        facilities: widget.facilities,
+        flightNumber: null,
+        airline: null,
+        arrivalTime: null,
+        servicesOffered: null,
+        images: null,
+        isActive: null,
+        createdAt: DateTime.now(), // Set current time as createdAt
+        artist: null,
+        category: null,
+        highlights: null,
+        services: null,
+        rating: null,
       );
 
-      // Write the ticket to Firestore
       await Ticket.writeTicket(ticket);
-      print("true");
-      // Update the flight's available seats
+
       await FirebaseFirestore.instance
-          .collection('flights')
-          .doc(widget.flight.id)
+          .collection('bus')
+          .doc(widget.busId)
           .update({
-        'availableSeats': widget.flight.availableSeats - widget.numberOfPassengers,
+        'tickets': widget.availableSeats - widget.numberOfPassengers,
       });
 
-      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -80,10 +104,8 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
       );
 
-      // Navigate back to the first route
       Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -104,8 +126,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate total cost using flight price and number of passengers
-    final double totalCost = widget.flight.price * widget.numberOfPassengers;
+    final double totalCost = widget.price * widget.numberOfPassengers;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -131,23 +152,22 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   child: Column(
                     children: [
-                      const Text('Summary',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                      const Text(
+                        'Summary',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
                       const SizedBox(height: 10),
+                      _infoRow('${widget.departureCity} to ${widget.destinationCity}'),
+                      _infoRow(widget.departureTime.toLocal().toString().split(' ')[0]),
                       _infoRow(
-                          '${widget.flight.departureCity} to ${widget.flight.destinationCity}'),
-                      _infoRow(widget.flight.departureTime.toLocal()
-                          .toString()
-                          .split(' ')[0]),
-                      _infoRow('Passengers',
+                          'Passengers',
                           secondstr:
                           '${widget.numberOfPassengers} Adult${widget.numberOfPassengers > 1 ? 's' : ''}'),
-                      _infoRow('Flight',
-                          secondstr:
-                          '${widget.flight.flightNumber} (${widget.flight.airline})'),
+                      if (widget.duration != null)
+                        _infoRow('Duration', secondstr: widget.duration),
                     ],
                   ),
                 ),
@@ -161,11 +181,13 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   child: Column(
                     children: [
-                      const Text('Payment Method',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                      const Text(
+                        'Payment Method',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
                       const SizedBox(height: 10),
                       _paymentOption('JazzCash'),
                       _paymentOption('EasyPaisa'),
@@ -182,9 +204,11 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   child: Column(
                     children: [
-                      _infoRow('Total',
-                          secondstr: '\$${totalCost.toStringAsFixed(2)}',
-                          bold: true),
+                      _infoRow(
+                        'Total',
+                        secondstr: '\$${totalCost.toStringAsFixed(2)}',
+                        bold: true,
+                      ),
                     ],
                   ),
                 ),
@@ -232,15 +256,21 @@ class _PaymentPageState extends State<PaymentPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
           if (secondstr != null)
-            Text(secondstr,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+            Text(
+              secondstr,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
         ],
       ),
     );

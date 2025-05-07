@@ -1,40 +1,89 @@
 import 'package:bookify/Screens/Colors.dart';
-import 'package:bookify/Screens/Home.dart';
 import 'package:bookify/Screens/flights/buildcard.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../services/flights.dart';
 import '../flights_cards.dart';
 import 'flight_details_page.dart';
 
 class Flightsearch extends StatefulWidget {
-  const Flightsearch({super.key});
+  final String? from;
+  final String? to;
+  final DateTime? departureTime;
+
+  const Flightsearch({
+    Key? key,
+    this.from,
+    this.to,
+    this.departureTime,
+  }) : super(key: key);
 
   @override
   State<Flightsearch> createState() => _FlightsearchState();
 }
 
 class _FlightsearchState extends State<Flightsearch> {
-  final TextStyle whiteTextStyle = TextStyle(color: Colors.white);
+  final TextStyle whiteTextStyle = const TextStyle(color: Colors.white);
   late List<Flight> _flights;
   bool _isLoading = false;
-  Future<void> flightsdata() async {
+  final TextEditingController _fromController = TextEditingController();
+  final TextEditingController _toController = TextEditingController();
+  DateTime? _selectedDate;
+  final DateFormat _dateFormat = DateFormat('MMMM d, yyyy');
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with widget parameters if provided
+    _fromController.text = widget.from ?? '';
+    _toController.text = widget.to ?? '';
+    _selectedDate = widget.departureTime;
+    _flights = [];
+    // Fetch initial flight data
+    _fetchFlights();
+  }
+
+  @override
+  void dispose() {
+    _fromController.dispose();
+    _toController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchFlights() async {
     setState(() {
       _isLoading = true;
     });
-    _flights = await Fectchdata.fetchFlightData();
-
+    try {
+      _flights = await Fectchdata.fetchFlightData(
+        from: _fromController.text.isNotEmpty ? _fromController.text : null,
+        to: _toController.text.isNotEmpty ? _toController.text : null,
+        departureTime: _selectedDate,
+      );
+    } catch (e) {
+      debugPrint('Error fetching flights: $e');
+      _flights = [];
+    }
     setState(() {
       _isLoading = false;
     });
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    flightsdata();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+      _fetchFlights();
+    }
   }
 
   @override
@@ -43,8 +92,8 @@ class _FlightsearchState extends State<Flightsearch> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         foregroundColor: Colors.black,
-        backgroundColor: Color(0xFFFFD700),
-        title: Text(
+        backgroundColor: const Color(0xFFFFD700),
+        title: const Text(
           'Search Flights',
           style: TextStyle(
             fontSize: 24,
@@ -52,7 +101,7 @@ class _FlightsearchState extends State<Flightsearch> {
           ),
         ),
       ),
-      body:SafeArea(
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -61,72 +110,99 @@ class _FlightsearchState extends State<Flightsearch> {
               Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: cardColor,
-                        borderRadius: BorderRadius.circular(12),
+                    child: TextField(
+                      controller: _fromController,
+                      style: whiteTextStyle,
+                      decoration: InputDecoration(
+                        hintText: 'From',
+                        hintStyle: whiteTextStyle,
+                        filled: true,
+                        fillColor: cardColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      child: Text('From', style: whiteTextStyle),
+                      onChanged: (value) {
+                        _fetchFlights();
+                      },
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: cardColor,
-                        borderRadius: BorderRadius.circular(12),
+                    child: TextField(
+                      controller: _toController,
+                      style: whiteTextStyle,
+                      decoration: InputDecoration(
+                        hintText: 'To',
+                        hintStyle: whiteTextStyle,
+                        filled: true,
+                        fillColor: cardColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      child: Text('To', style: whiteTextStyle),
+                      onChanged: (value) {
+                        _fetchFlights();
+                      },
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _selectedDate == null
+                        ? 'Select Departure Date'
+                        : _dateFormat.format(_selectedDate!),
+                    style: whiteTextStyle,
+                  ),
                 ),
-                child: Text('April 24, 2024', style: whiteTextStyle),
               ),
-              SizedBox(height: 20),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.27,
-
+              const SizedBox(height: 20),
+              Expanded(
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _flights.isEmpty
                     ? const Center(child: Text('No flights available'))
                     : ListView.builder(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  //scrollDirection: Axis.vertical,
                   itemCount: _flights.length,
-                  shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final flight = _flights[index];
                     return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.27,
-                      width: MediaQuery.of(context).size.width * 0.9,// Dynamic height
+                      height:
+                      MediaQuery.of(context).size.height * 0.27,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       child: FlightCard(
                         flight: flight,
                         onBookNow: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>FlightBookingPage(flight: flight,)));
-                          // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen(flight: flight)));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FlightBookingPage(flight: flight),
+                            ),
+                          );
                         },
                       ),
                     );
                   },
                 ),
               ),
-
             ],
           ),
         ),
-      
-    ),);
+      ),
+    );
   }
 }

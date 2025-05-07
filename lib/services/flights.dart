@@ -120,17 +120,52 @@ class FlightService {
   }
 }
 class Fectchdata{
-  static Future<List<Flight>> fetchFlightData() async {
+  static Future<List<Flight>> fetchFlightData({
+    String? from,
+    String? to,
+    DateTime? departureTime,
+  }) async {
     try {
-      final querySnapshot = await FirebaseFirestore.instance
+      debugPrint('Fetching flights with params - from: $from, to: $to, departureTime: $departureTime');
+      // Start with the base query for active flights
+      Query<Map<String, dynamic>> query = FirebaseFirestore.instance
           .collection('flights')
-          .where('isActive', isEqualTo: true)
-          .get();
+          .where('isActive', isEqualTo: true);
+
+      // Apply filters if parameters are provided
+      if (from != null && from.isNotEmpty) {
+        debugPrint('Filtering by departureCity: $from');
+        query = query.where('departureCity', isEqualTo: from.trim());
+      }
+      if (to != null && to.isNotEmpty) {
+        debugPrint('Filtering by destinationCity: $to');
+        query = query.where('destinationCity', isEqualTo: to.trim());
+      }
+      if (departureTime != null) {
+        // Extract date components for comparison
+        final startOfDay = DateTime(
+          departureTime.year,
+          departureTime.month,
+          departureTime.day,
+        ).toUtc(); // Convert to UTC for consistency
+        final endOfDay = startOfDay.add(const Duration(days: 1)).toUtc();
+
+        debugPrint('Filtering by departureTime range: $startOfDay to $endOfDay');
+        query = query
+            .where('departureTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+            .where('departureTime',
+            isLessThan: Timestamp.fromDate(endOfDay));
+      }
+
+      // Execute the query
+      final querySnapshot = await query.get();
 
       // Map each document to a Future<Flight> and wait for all to complete
       final flightFutures = querySnapshot.docs.map((doc) => Flight.fromFirestore(doc)).toList();
       final flights = await Future.wait(flightFutures);
 
+      debugPrint('Fetched ${flights.length} flights');
       return flights;
     } catch (e) {
       debugPrint('Error fetching flights: $e');
