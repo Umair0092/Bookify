@@ -128,7 +128,8 @@ Widget buildcard({
               height: 120,
               color: Colors.grey,
               child: Image.asset(
-               "assets/bus.jpg"
+               _getImagePath(ticket),
+               fit: BoxFit.fill,
               ),
             ),
           ),
@@ -260,6 +261,18 @@ Widget buildcard({
       ),
     );
   }
+  String _getImagePath(Ticket ticket) {
+   if (ticket.ticketType == TicketType.bus) {
+    return 'assets/bus.jpg';
+  }
+  else if (ticket.ticketType == TicketType.service)
+  {
+     return 'assets/cleaner.png';
+  }
+   else {
+    return 'assets/Dj.png';
+  }
+}
 
   // Reusable Toggle Button
   Widget buildToggleButton({
@@ -351,6 +364,7 @@ Widget buildcard({
     );
   }
 
+
   // Helper method to get ticket title based on type
   String _getTicketTitle(Ticket ticket) {
     if (ticket.ticketType == TicketType.bus) {
@@ -369,6 +383,7 @@ Widget buildcard({
     }
   }
 
+
   // Helper method to get ticket subtitle based on type
   String _getTicketSubtitle(Ticket ticket) {
     if (ticket.ticketType == TicketType.bus) {
@@ -377,7 +392,9 @@ Widget buildcard({
       return ticket.flightNumber ?? 'Unknown Flight';
     } else if (ticket.ticketType == TicketType.event) {
       return ticket.category ?? 'Unknown Category';
-    } else {
+    }else if (ticket.ticketType == TicketType.service) {
+      return ticket.services![0] ?? 'Unknown Event';} 
+    else {
       return ticket.services?.join(', ') ?? 'Unknown Service';
     }
   }

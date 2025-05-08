@@ -12,14 +12,14 @@ class BusBookingPage extends StatefulWidget {
 }
 
 class _BusBookingPageState extends State<BusBookingPage> {
-  int _ticketCount = 1;
+  int _ticketCount = 0;
   double _singleTicketCost = 0.0;
   String title = "";
   int availableSeats = 0;
   String from = "";
   String to = "";
   String timeStr="";
-  
+ 
   String? duration;
   DateTime dep=DateTime(2025);
   List<String> facilities = [];
@@ -48,6 +48,7 @@ class _BusBookingPageState extends State<BusBookingPage> {
           String dateStr = data['date'] as String? ?? '15/5/2025'; // Default to current date if missing
            timeStr = data['time'] as String? ?? '8:50AM'; // Default to a time if missing
          // departureTime = _parseDateTime(dateStr, timeStr);
+         
           _singleTicketCost = (data['ticketcost'] as num?)?.toDouble() ?? 0.0;
           availableSeats = (data['tickets'] as num?)?.toInt() ?? 0;
           duration = data['duration'] as String?;
@@ -273,33 +274,33 @@ class _BusBookingPageState extends State<BusBookingPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
-                  ),
-                  Text(
-                    "$from -> $to",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
-                  ),
-                ],
+              Text(
+                "Bus Details",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
+              Text(
+                "Bus operator: $title",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              
+              Text(
+                "From: $from   ($timeStr)",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              Text(
+                "To: $to",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              //const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "Departure: ${dep.toLocal().toString().split(' ')[0]} ${dep.toLocal().toString().split(' ')[1].substring(0, 5)}",
+                    "Departure: ${dep.toLocal().toString().split(' ')[0]} ",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -323,6 +324,20 @@ class _BusBookingPageState extends State<BusBookingPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Available Tickets:",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  Text(
+                    "${availableSeats - _ticketCount}",
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

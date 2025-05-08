@@ -13,7 +13,7 @@ class EventBookingPage extends StatefulWidget {
 }
 
 class _EventBookingPageState extends State<EventBookingPage> {
-  int _ticketCount = 1;
+  int _ticketCount = 0;
   double _singleTicketCost = 0.0;
   int _availableTickets = 0;
   bool isLoading = true;
@@ -346,6 +346,20 @@ class _EventBookingPageState extends State<EventBookingPage> {
                 ),
               ),
               const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Available Tickets:",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  Text(
+                    "${_availableTickets - _ticketCount}",
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

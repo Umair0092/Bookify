@@ -327,7 +327,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     : null,
               ),
               const SizedBox(height: 10),
-              TextFormField(
+                            TextFormField(
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Expiry Date (MM/YY)',
@@ -335,11 +335,33 @@ class _PaymentPageState extends State<PaymentPage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) => expiryDate = value,
-                validator: (value) =>
-                    value == null || !RegExp(r'^\d{2}/\d{2}$').hasMatch(value)
-                        ? 'Enter valid expiry date'
-                        : null,
+                validator: (value) {
+                  if (value == null || !RegExp(r'^\d{2}/\d{2}$').hasMatch(value)) {
+                    return 'Enter valid expiry date';
+                  }
+
+                  final parts = value.split('/');
+                  final int month = int.tryParse(parts[0]) ?? 0;
+                  final int year = int.tryParse(parts[1]) ?? -1;
+
+                  if (month < 1 || month > 12) {
+                    return 'Invalid month';
+                  }
+
+                  // Convert 2-digit year to 4-digit year (e.g., 25 => 2025)
+                  final currentYear = DateTime.now().year;
+                  final fullYear = 2000 + year;
+                  final now = DateTime.now();
+                  final expiry = DateTime(fullYear, month + 1); // Valid through the end of that month
+
+                  if (expiry.isBefore(now)) {
+                    return 'Expiry date is in the past';
+                  }
+
+                  return null;
+                },
               ),
+
               const SizedBox(height: 10),
               TextFormField(
                 style: const TextStyle(color: Colors.white),

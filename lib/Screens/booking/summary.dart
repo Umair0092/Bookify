@@ -1,6 +1,5 @@
 import 'package:bookify/Screens/Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/tickets.dart'; // Ticket class
 
 class Summary extends StatefulWidget {
@@ -50,16 +49,22 @@ class _SummaryState extends State<Summary> {
                 _infoRow('Artist', secondstr: ticket.artist ?? 'Unknown'),
               if (ticket.ticketType == TicketType.event)
                 _infoRow('Category', secondstr: ticket.category ?? 'Unknown'),
+              if (ticket.ticketType == TicketType.service)
+                _infoRow('Company', secondstr: ticket.title ?? 'Unknown'),
+              if (ticket.ticketType == TicketType.service)
+                _infoRow('Service', secondstr: ticket.services![0] ?? 'Unknown'),
               if (ticket.ticketType == TicketType.event || ticket.ticketType == TicketType.bus)
                 _infoRow('Location', secondstr: ticket.locationFrom ?? 'Unknown'),
               _infoRow(
                 ticket.date.toLocal().toString().split(' ')[0],
                 secondstr: ticket.time,
               ),
-              _infoRow(
+              if (ticket.ticketType != TicketType.service)
+                 _infoRow(
                 'Tickets',
                 secondstr: '${ticket.availableTickets} Ticket${ticket.availableTickets > 1 ? 's' : ''}',
               ),
+             
               if (ticket.ticketType == TicketType.flight) ...[
                 _infoRow('Airline', secondstr: ticket.airline ?? 'Unknown'),
                 _infoRow('Flight Number', secondstr: ticket.flightNumber ?? 'Unknown'),
@@ -87,15 +92,15 @@ class _SummaryState extends State<Summary> {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: const Text('Delete Booking'),
-                        content: const Text('Are you sure you want to delete this booking?'),
+                        title: const Text('Cancel  Booking'),
+                        content: const Text('Are you sure you want to cancel  this booking?'),
                         actions: [
                           TextButton(
                             child: const Text('Cancel'),
                             onPressed: () => Navigator.pop(ctx, false),
                           ),
                           TextButton(
-                            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                            child: const Text('ok', style: TextStyle(color: Colors.red)),
                             onPressed: () => Navigator.pop(ctx, true),
                           ),
                         ],
@@ -107,7 +112,7 @@ class _SummaryState extends State<Summary> {
                         await deleteTicket( userId: ticket.userId, ticketId: ticket.id, ticketType: ticket.ticketType);
                         if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Booking deleted successfully')),
+                          const SnackBar(content: Text('Booking canceled successfully')),
                         );
                         Navigator.pop(context, true);// Go back after deletion
                       } catch (e) {
@@ -117,7 +122,7 @@ class _SummaryState extends State<Summary> {
                       }
                     }
                   },
-                  child: const Text('Delete Booking', style: TextStyle(color: Colors.white)),
+                  child: const Text('Cancel Booking', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

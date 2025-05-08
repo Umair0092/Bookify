@@ -149,13 +149,13 @@ class eventhorizontal extends StatelessWidget {
           height: 150, // Enough height for horizontal cards
           child: ListView.builder(
             itemCount: event.length,
-            //shrinkWrap: true,
+            shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final even = event[index];
-              return SizedBox(
+              return Container(
                 width: 220,
-                //margin: EdgeInsets.only(left: 12),
+                margin: EdgeInsets.only(left: 12),
                 child: Eventcard(
                   id:even.id,
                   eventname:even.eventname,

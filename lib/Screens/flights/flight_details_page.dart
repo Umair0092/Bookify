@@ -23,7 +23,7 @@ class _FlightBookingPageState extends State<FlightBookingPage> {
   @override
   void initState() {
     super.initState();
-    _ticketCount = 1;
+    _ticketCount = 0;
     total_seats = widget.flight.availableSeats;
   }
 

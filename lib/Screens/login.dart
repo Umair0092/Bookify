@@ -395,32 +395,7 @@ class _loginState extends State<login> {
                 ),
               ),
               SizedBox(height: 20),
-              SignInButton(
-                buttonType: ButtonType.google,
-                imagePosition: ImagePosition.right,
-                buttonSize: ButtonSize.large,
-                btnTextColor: Colors.black,
-                btnColor: Colors.white,
-                width: 240,
-                onPressed: () async {
-                  await signInWithGoogle();
-                  final User? currentUser = await _auth.currentUser;
-                  if (currentUser != null) {
-                    await LocalDataSaver.saveLoginData(true);
-                    await LocalDataSaver.saveImg(currentUser.photoURL ?? '');
-                    await LocalDataSaver.saveMail(currentUser.email ?? '');
-                    await LocalDataSaver.saveName(currentUser.displayName ?? '');
-                    await LocalDataSaver.saveSyncValue(false);
-                    if (mounted) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => home()),
-                        (Route<dynamic> route) => false,
-                      );
-                    }
-                  }
-                },
-              ),
+             
             ],
           ),
         ),
